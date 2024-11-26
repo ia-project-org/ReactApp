@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service # Exposing q network application running as one or more Pods in the Cluster
+metadata: # Data that helps uniquely identify the object
+  name: load-balancer
+spec:
+  selector: # The set of pods targeted by the Service
+    app: react-app-label # Needs to match deployment.yaml
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: LoadBalancer  # Exposes the service externally using a load balancer
