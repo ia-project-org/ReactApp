@@ -8,6 +8,8 @@ pipeline {
         DOCKER_TAG_NAME = 'latest'
         DOCKER_REGISTRY = 'soukaina915/ai-front'
         DOCKER_REGISTRY_CREDENTIALS_ID = 'soukaina-docker-hub' 
+        MANIFEST_URL = 'https://github.com/ia-project-org/FrontendManifest.git'
+        GITHUB_CREDENTIALS = "github-soukaina"
     }
 
     stages {
@@ -85,10 +87,17 @@ pipeline {
         }
 
 
-        stage('Deploy') {
+        stage('Push Manifest Changes to Git') {
             steps {
                 script {
-                    echo "Deployment stage...."
+                    withCredentials([usernamePassword(credentialsId: GITHUB_CREDENTIALS, passwordVariable: 'GITHUB_PASSWORD', usernameVariable: 'GITHUB_USERNAME')]) {
+                        git credentialsId: GITHUB_CREDENTIALS, url: MANIFEST_URL, branch: 'main'
+                        sh """
+                            git add .
+                            git commit -m "Update Kubernetes manifests for deployment"
+                            git push origin main
+                        """
+                    }
                 }
             }
         }
