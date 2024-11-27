@@ -96,6 +96,7 @@ pipeline {
                             git add .
                             git commit -m "Update Kubernetes manifests for deployment"
                             git push origin main
+                            git push https://${GITHUB_USERNAME}:${GITHUB_PASSWORD}@github.com/ia-project-org/FrontendManifest.git main
                         """
                     }
                 }
