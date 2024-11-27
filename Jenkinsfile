@@ -77,7 +77,7 @@ pipeline {
             steps {
                 script {
                     echo "Building and pushing docker image..."
-                    def dockerImage = docker.build("${DOCKER_REGISTRY}:${DOCKER_TAG_NAME}")
+                    def dockerImage = docker.build("${DOCKER_REGISTRY}:${BUILD_NUMBER}")
                     
                     docker.withRegistry('', DOCKER_REGISTRY_CREDENTIALS_ID) {
                         dockerImage.push()
