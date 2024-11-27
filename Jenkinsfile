@@ -100,7 +100,9 @@ pipeline {
                     }
                 }
             }
+        }
     }
+    
 
     post {
         always {
