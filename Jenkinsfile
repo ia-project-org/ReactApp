@@ -93,7 +93,7 @@ pipeline {
                     withCredentials([usernamePassword(credentialsId: GITHUB_CREDENTIALS, passwordVariable: 'GITHUB_PASSWORD', usernameVariable: 'GITHUB_USERNAME')]) {
                         git credentialsId: GITHUB_CREDENTIALS, url: MANIFEST_URL, branch: 'main'
                         sh """
-                            git add .
+                            git add argocd-app.yaml
                             git commit -m "Update Kubernetes manifests for deployment"
                             git push https://${GITHUB_USERNAME}:${GITHUB_PASSWORD}@github.com/ia-project-org/FrontendManifest.git main
                         """
