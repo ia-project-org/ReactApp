@@ -90,10 +90,17 @@ pipeline {
         stage('Push Manifest Changes to Git') {
             steps {
                 script {
+                    def newImageTag = "soukaiana915/ai-front:${BUILD_NUMBER}" // Or use any versioning strategy
+
                     withCredentials([usernamePassword(credentialsId: GITHUB_CREDENTIALS, passwordVariable: 'GITHUB_PASSWORD', usernameVariable: 'GITHUB_USERNAME')]) {
                         git credentialsId: GITHUB_CREDENTIALS, url: MANIFEST_URL, branch: 'main'
+
                         sh """
-                            git add argocd-app.yaml
+                            sed -i 's|soukaiana915/ai-front:[^ ]*|${newImageTag}|' deployment.yaml
+                        """
+
+                        sh """
+                            git add deployment.yaml
                             git commit -m "Update Kubernetes manifests for deployment"
                             git push https://${GITHUB_USERNAME}:${GITHUB_PASSWORD}@github.com/ia-project-org/FrontendManifest.git main
                         """
