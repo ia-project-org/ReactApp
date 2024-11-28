@@ -35,11 +35,12 @@ pipeline {
             }
         }
 
-        stage('Run Unit Tests') {
+        stage('Run Unit Tests and Coverage') {
             steps {
                 script { 
                     echo "Running Vitest tests..."
                     sh 'npm test -- --reporter=json > test-output.json'
+                    sh 'npm run coverage'
                     stash name: 'test-results', includes: 'test-output.json'
                 }
             }
