@@ -91,12 +91,15 @@ pipeline {
             steps {
                 script {
                     def newImageTag = "soukaiana915/ai-front:${BUILD_NUMBER}" // Or use any versioning strategy
+                    echo "New image tag: ${newImageTag}"
 
                     withCredentials([usernamePassword(credentialsId: GITHUB_CREDENTIALS, passwordVariable: 'GITHUB_PASSWORD', usernameVariable: 'GITHUB_USERNAME')]) {
                         git credentialsId: GITHUB_CREDENTIALS, url: MANIFEST_URL, branch: 'main'
 
                         sh """
                             sed -i 's|soukaiana915/ai-front:[^ ]*|${newImageTag}|' dev/deployment.yaml
+                            echo "Updated image tag in deployment.yaml to ${newImageTag}"
+                            cat dev/deployment.yaml
                         """
 
                         sh """
