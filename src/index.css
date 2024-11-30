@@ -2,8 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-:root{
-  background-color: crimson;
+:root {
+  @apply h-full;
 }
 
 @layer base {
