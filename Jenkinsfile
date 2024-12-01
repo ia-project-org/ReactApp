@@ -8,6 +8,8 @@ pipeline {
         DOCKER_TAG_NAME = 'latest'
         DOCKER_REGISTRY = 'soukaina915/ai-front'
         DOCKER_REGISTRY_CREDENTIALS_ID = 'soukaina-docker-hub' 
+        MANIFEST_URL = 'https://github.com/ia-project-org/FrontendManifest.git'
+        GITHUB_CREDENTIALS = "github-soukaina"
     }
 
     stages {
@@ -33,11 +35,12 @@ pipeline {
             }
         }
 
-        stage('Run Unit Tests') {
+        stage('Run Unit Tests and Coverage') {
             steps {
                 script { 
                     echo "Running Vitest tests..."
                     sh 'npm test -- --reporter=json > test-output.json'
+                    sh 'npm run coverage'
                     stash name: 'test-results', includes: 'test-output.json'
                 }
             }
@@ -75,7 +78,7 @@ pipeline {
             steps {
                 script {
                     echo "Building and pushing docker image..."
-                    def dockerImage = docker.build("${DOCKER_REGISTRY}:${DOCKER_TAG_NAME}")
+                    def dockerImage = docker.build("${DOCKER_REGISTRY}:${BUILD_NUMBER}")
                     
                     docker.withRegistry('', DOCKER_REGISTRY_CREDENTIALS_ID) {
                         dockerImage.push()
@@ -85,14 +88,33 @@ pipeline {
         }
 
 
-        stage('Deploy') {
+        stage('Push Manifest Changes to Git') {
             steps {
                 script {
-                    echo "Deployment stage...."
+                    def newImageTag = "soukaina915/ai-front:${BUILD_NUMBER}" // Or use any versioning strategy
+                    echo "New image tag: ${newImageTag}"
+
+                    withCredentials([usernamePassword(credentialsId: GITHUB_CREDENTIALS, passwordVariable: 'GITHUB_PASSWORD', usernameVariable: 'GITHUB_USERNAME')]) {
+                        git credentialsId: GITHUB_CREDENTIALS, url: MANIFEST_URL, branch: 'main'
+
+                        sh """
+                            sed -i 's|soukaina915/ai-front:[^ ]*|${newImageTag}|' dev/deployment.yaml
+                            echo "Updated image tag in deployment.yaml to ${newImageTag}"
+                            cat dev/deployment.yaml
+                        """
+
+                        sh """
+                            git status
+                            git add dev/deployment.yaml
+                            git commit -m "Update Kubernetes manifests for deployment"
+                            git push https://${GITHUB_USERNAME}:${GITHUB_PASSWORD}@github.com/ia-project-org/FrontendManifest.git main
+                        """
+                    }
                 }
             }
         }
     }
+    
 
     post {
         always {
