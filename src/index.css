@@ -2,8 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-:root{
-  background-color: crimson;
+body{
+  font-weight: normal;
 }
 
 @layer base {
