@@ -70,6 +70,7 @@ export function LoginForm() {
                         placeholder="Enter your email"
                         className="w-full"
                         {...field}
+                        required
                       />
                     </FormControl>
                     <FormMessage />
@@ -90,6 +91,7 @@ export function LoginForm() {
                         placeholder="Enter your password"
                         className="w-full"
                         {...field}
+                        required
                       />
                     </FormControl>
                     <FormMessage />
