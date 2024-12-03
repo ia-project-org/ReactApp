@@ -8,6 +8,7 @@ export const clients: ClientDto[] = [
         lastName: "Dojkjm",
         email: "john.doe@example.com",
         phoneNumber: "123-456-7890",
+        score : 30
     },
     {
         clientId: 4,
@@ -16,5 +17,25 @@ export const clients: ClientDto[] = [
         lastName: "Smith",
         email: "jane.smith@example.com",
         phoneNumber: "987-654-3210",
+        score : 25
+    },
+    {
+        clientId: 4,
+        clientDetailsId: 102,
+        firstName: "Jane",
+        lastName: "Smith",
+        email: "jane.smith@example.com",
+        phoneNumber: "987-654-3210",
+        score : 65
+
+    },
+    {
+        clientId: 4,
+        clientDetailsId: 102,
+        firstName: "Jane",
+        lastName: "Smith",
+        email: "jane.smith@example.com",
+        phoneNumber: "987-654-3210",
+        score : 89
     },
 ];

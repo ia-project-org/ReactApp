@@ -1,34 +1,40 @@
-    import { useState, useEffect } from 'react';
-    import { DataTable } from "../../models/clients/data-table.tsx"
-    import {ClientDto} from "@/models/Client.ts";
-    import {clientColumns} from "@/models/clients/columns.tsx";
-    import {clients} from "@/models/clientsData.ts";
+import { useState, useEffect } from 'react';
+import { DataTable } from "./client-table/data-table.tsx";
+import { ClientDto } from "@/models/Client.ts";
+import { clientColumns } from "@/components/dashboard/client-table/columns.tsx";
+import { clients } from "@/models/clientsData.ts";
 
-    async function getData(): Promise<ClientDto[]> {
-        // Fetch data from your API here.
-        return clients;
-    }
+async function getData(): Promise<ClientDto[]> {
+    // Fetch data from your API here.
+    return clients;
+}
 
-    export default function DemoPage() {
-        const [data, setData] = useState<ClientDto[]>([]);
-        const [loading, setLoading] = useState(true);
+interface ClientTableProps {
+    onClientDetails: (client: ClientDto) => void;
+}
 
-        useEffect(() => {
-            async function fetchData() {
-                const result = await getData();
-                setData(result);
-                setLoading(false);
-            }
-            fetchData();
-        }, []);
+export default function ClientTable({ onClientDetails }: ClientTableProps) {
+    const [data, setData] = useState<ClientDto[]>([]);
+    const [loading, setLoading] = useState(true);
 
-        if (loading) {
-            return <div>Loading...</div>;
+    useEffect(() => {
+        async function fetchData() {
+            const result = await getData();
+            setData(result);
+            setLoading(false);
         }
+        fetchData();
+    }, []);
 
-        return (
-            <div className="container mx-auto bg-[#f4f4f4]">
-                <DataTable columns={clientColumns} data={data} />
-            </div>
-        )
+    if (loading) {
+        return <div>Loading...</div>;
     }
+
+    const columns = clientColumns(onClientDetails);
+
+    return (
+        <div className="container mx-auto bg-[#f4f4f4]">
+            <DataTable columns={columns} data={data} />
+        </div>
+    );
+}

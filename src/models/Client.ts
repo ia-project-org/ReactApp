@@ -5,4 +5,5 @@ export interface ClientDto {
     lastName: string;
     email: string;
     phoneNumber: string;
+    score : number;
 }
