@@ -1,4 +1,4 @@
-import { LoginForm } from "@/components/login-form";
+import FileUploader from "@/components/upload-section";
 
 function Login() {
 
@@ -8,7 +8,9 @@ function Login() {
                         bg-cover bg-center
                         flex items-center justify-center 
                         min-h-screen min-w-full">
-            <LoginForm/>
+            {/* <LoginForm/> */}
+            <div className="bg-white m-6 p-6"><FileUploader/></div>
+            
             <footer
                 className="fixed bottom-0 left-0 w-full 
                 flex justify-between items-center 
