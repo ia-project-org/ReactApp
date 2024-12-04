@@ -3,16 +3,17 @@ import {ColumnDef} from "@tanstack/react-table";
 
 export const clientColumns = (onClientDetails: (client: ClientDto) => void): ColumnDef<ClientDto>[] => [
     {
-        accessorKey: "firstName",
-        header: "First Name",
-    },
-    {
-        accessorKey: "lastName",
-        header: "Last Name",
+        accessorKey: "fullName",
+        header: "Full Name",
+        cell: ({ row }) => `${row.original.firstName}  ${row.original.lastName}`.trim()
     },
     {
         accessorKey: "email",
         header: "Email",
+    },
+    {
+        accessorKey: "cin",
+        header: "CIN",
     },
     {
         accessorKey: "phoneNumber",

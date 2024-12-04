@@ -7,6 +7,7 @@ export interface ClientDto {
     lastName: string;
     email: string;
     phoneNumber: string;
+    cin: string;
     eligibility: EligibilityDto;
     score: number;
 }

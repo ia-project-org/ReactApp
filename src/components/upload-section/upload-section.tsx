@@ -1,10 +1,13 @@
-import React, { useState } from "react";
-import { cn } from "@/lib/utils.ts";
+import React, {useState} from "react";
+import {cn} from "@/lib/utils.ts";
 import Papa from "papaparse"
-
+import axios from "axios";
 const FileUploader = () => {
   const [dragActive, setDragActive] = useState(false);
   const [csvData, setCsvData] = useState<string[][] | null>(null);
+  const [file, setFile] = useState<File| undefined>();
+
+  const formData = new FormData();
 
   const handleDrag = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -30,8 +33,21 @@ const FileUploader = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
+      setFile(file);
       handleFile(file);
     }
+  };
+
+  // send the csv file to backend endpoint in bank-ms
+  const handleSubmit = async () => {
+    formData.append('file', file as Blob);
+    const response = await axios.post(
+        `${import.meta.env.VITE_API_URL+"clients/import-csv"}`,
+        formData,{ headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        });
+    console.log(response.data)
   };
 
   const handleFile = (file: File) => {
@@ -106,6 +122,17 @@ const FileUploader = () => {
           </table>
         </div>
       )}
+      {/*
+      this juste for testing fonctionality
+      */}
+      <p>
+        <button className=" mt-3.5 p-2 bg-blue-500 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
+        onClick={()=>handleSubmit()}
+        >
+          Submit Import
+        </button>
+      </p>
+
       <p className="mt-4 text-sm text-gray-500">
         <a href="#" className="text-blue-500 underline">
           Learn more
