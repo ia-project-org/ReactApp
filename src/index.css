@@ -2,8 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-body{
-  font-weight: normal;
+:root {
+  @apply h-full;
 }
 
 @layer base {
