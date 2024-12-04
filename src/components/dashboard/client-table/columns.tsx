@@ -3,10 +3,6 @@ import {ColumnDef} from "@tanstack/react-table";
 
 export const clientColumns = (onClientDetails: (client: ClientDto) => void): ColumnDef<ClientDto>[] => [
     {
-        accessorKey: "clientId",
-        header: "Client ID",
-    },
-    {
         accessorKey: "firstName",
         header: "First Name",
     },

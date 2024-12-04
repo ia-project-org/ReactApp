@@ -8,4 +8,5 @@ export interface ClientDto {
     email: string;
     phoneNumber: string;
     eligibility: EligibilityDto;
+    score: number;
 }
