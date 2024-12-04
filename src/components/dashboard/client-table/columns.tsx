@@ -7,10 +7,6 @@ export const clientColumns = (onClientDetails: (client: ClientDto) => void): Col
         header: "Client ID",
     },
     {
-        accessorKey: "clientDetailsId",
-        header: "Client Details ID",
-    },
-    {
         accessorKey: "firstName",
         header: "First Name",
     },

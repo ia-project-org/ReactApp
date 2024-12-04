@@ -1,7 +1,7 @@
 import {ClientDto} from "@/models/Client.ts";
 
 export const clients: ClientDto[] = [
-    {
+   /* {
         clientId: 10,
         clientDetailsId: 101,
         firstName: "John",
@@ -37,5 +37,5 @@ export const clients: ClientDto[] = [
         email: "jane.smith@example.com",
         phoneNumber: "987-654-3210",
         score : 89
-    },
+    },*/
 ];
