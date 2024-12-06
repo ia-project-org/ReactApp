@@ -1,6 +1,3 @@
-/// <reference types="vitest" />
-/// <reference types="vite/client" />
-
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import * as path from "node:path";
@@ -13,9 +10,19 @@ import * as path from "node:path";
         "@": path.resolve(__dirname, "./src"),
       },
     },
-  test: {
-  globals: true,
-  environment: 'jsdom',
-  setupFiles: ['./src/setupTests.ts'],
-},
+    test: {
+      globals: true,
+      environment: 'jsdom',
+      setupFiles: ['./src/setupTests.ts'],
+    },
+
+    build: {
+      // generate .vite/manifest.json in outDir
+      manifest: true,
+      rollupOptions: {
+        // overwrite default .html entry
+        input: './src/main.tsx',
+      },
+    },
+
 });
