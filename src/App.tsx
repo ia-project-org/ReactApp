@@ -1,12 +1,11 @@
-import {createBrowserRouter, Outlet, RouterProvider, useLocation} from 'react-router-dom';
-import Navbar from '@/components/dashboard/Navbar.tsx';
-import Dashboard from "@/components/dashboard/Dashboard.tsx";
-import ClientTable from "@/components/dashboard/page.tsx";
-import Login from './pages/login.tsx';
-import './App.css'
 import React from "react";
+import { createBrowserRouter, Outlet, RouterProvider, useLocation } from "react-router-dom";
+import Navbar from "@/components/dashboard/Navbar.tsx";
+import Dashboard from "@/components/dashboard/Dashboard.tsx";
 import Upload from "@/pages/upload.tsx";
-
+import keycloak from "@/auth/keycloak.ts";
+import { ReactKeycloakProvider } from "@react-keycloak/web";
+import './App.css';
 
 const RootLayout: React.FC = () => {
     const location = useLocation();
@@ -14,35 +13,37 @@ const RootLayout: React.FC = () => {
 
     return (
         <>
+            {/* Afficher la barre de navigation uniquement si l'utilisateur n'est pas sur la page de login */}
             {currentPath !== '/' && <Navbar />}
             <Outlet />
         </>
     );
 };
 
+// Composant pour protéger les routes privées
+const PrivateRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+    if (!keycloak.authenticated) {
+        keycloak.login(); // Rediriger vers la page de login de Keycloak si non authentifié
+        return null;
+    }
+    return <>{children}</>;
+};
+
 const App: React.FC = () => {
     const router = createBrowserRouter([
         {
             path: "/",
-            element: <RootLayout />,
+            element: (
+                <PrivateRoute>
+                    <RootLayout />
+                </PrivateRoute>
+            ),
             children: [
-                {
-                    index: true,
-                    element: <Login />,
-                },
                 {
                     path: "upload",
                     element: (
                         <main>
                             <Upload />
-                        </main>
-                    ),
-                },
-                {
-                    path: "table",
-                    element: (
-                        <main className="p-4">
-                            <ClientTable />
                         </main>
                     ),
                 },
@@ -54,11 +55,23 @@ const App: React.FC = () => {
                         </main>
                     ),
                 },
+                {
+                    path: "table",
+                    element: (
+                        <main className="p-4">
+                            {/* Ajouter votre tableau ici */}
+                        </main>
+                    ),
+                },
             ],
         },
     ]);
 
-    return <RouterProvider router={router} />;
+    return (
+        <ReactKeycloakProvider authClient={keycloak}>
+            <RouterProvider router={router} />
+        </ReactKeycloakProvider>
+    );
 };
 
 export default App;

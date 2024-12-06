@@ -13,6 +13,7 @@ async function getData(): Promise<ClientDto[]> {
         response.data.map(async (client: ClientDto) => {
             try {
                 const res = await axios.get<EligibilityDto>(`${import.meta.env.VITE_API_URL + `eligibility/${client.clientId}`}`);
+                console.log(res.data);
                 return {
                     ...client,
                     eligibility: res.data
