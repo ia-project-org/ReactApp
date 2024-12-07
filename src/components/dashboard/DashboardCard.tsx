@@ -19,17 +19,20 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
                                                          icon,
                                                      }) => {
     return (
-        <div className="bg-[#f4f4f4] rounded-[3.5px] p-8 shadow-sm">
-            <div className="flex items-center mb-2">
+        <div className="bg-white shadow-md rounded-md py-6 px-3">
+            <div className="flex justify-between items-center -mt-4">
                 {icon}
-                <span className="text-sm text-gray-600 ml-2">{title}</span>
+                <span className={`${percentageColor}`}>{percentage}</span>
             </div>
-            <div className="flex justify-between items-baseline">
+            <div className="text-lg font-bold my-2">
+            <span className="text-lg font-bold mb-4">{title}</span>
+            </div>
+            <div className="flex  justify-center items-baseline">
                 <h3 className="text-2xl font-semibold">{value}</h3>
-                <span className={`text-sm ${percentageColor}`}>{percentage}</span>
             </div>
-            <div className="mt-2 text-sm text-gray-500">
-                vs last month: {prevMonthValue}
+            <div className="items-center justify-around flex mt-2 text-sm text-gray-500">
+                <img src={'ArrowUpwardRounded.svg'} alt={''}/>
+                <p>{prevMonthValue} vs last month</p>
             </div>
         </div>
     );

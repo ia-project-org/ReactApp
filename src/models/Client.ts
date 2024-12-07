@@ -1,7 +1,7 @@
 import {EligibilityDto} from "@/models/Eligibility.ts";
+import {ClientDetailsDto} from "@/models/ClientDetails.ts";
 
 export interface ClientDto {
-    client: ClientDto[];
     clientId: number;
     firstName: string;
     lastName: string;
@@ -10,4 +10,5 @@ export interface ClientDto {
     cin: string;
     eligibility: EligibilityDto;
     score: number;
+    details: ClientDetailsDto
 }

@@ -1,11 +1,11 @@
 import {createBrowserRouter, Outlet, RouterProvider, useLocation} from 'react-router-dom';
-import Navbar from '@/components/dashboard/Navbar.tsx';
 import Dashboard from "@/components/dashboard/Dashboard.tsx";
 import ClientTable from "@/components/dashboard/page.tsx";
-import Login from './pages/login.tsx';
 import './App.css'
 import React from "react";
 import Upload from "@/pages/upload.tsx";
+import HeaderUi from "@/components/dashboard/HeaderUi.tsx";
+import Statistics from "@/components/dashboard/statistics.tsx";
 
 
 const RootLayout: React.FC = () => {
@@ -14,7 +14,7 @@ const RootLayout: React.FC = () => {
 
     return (
         <>
-            {currentPath !== '/' && <Navbar />}
+            {currentPath !== '/' && <HeaderUi />}
             <Outlet />
         </>
     );
@@ -28,7 +28,7 @@ const App: React.FC = () => {
             children: [
                 {
                     index: true,
-                    element: <Login />,
+                    element: <Statistics />,
                 },
                 {
                     path: "upload",
