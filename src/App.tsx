@@ -6,6 +6,7 @@ import Login from './pages/login.tsx';
 import './App.css'
 import React from "react";
 import Upload from "@/pages/upload.tsx";
+import Recommendations from './pages/recommendations.tsx';
 
 
 const RootLayout: React.FC = () => {
@@ -51,6 +52,14 @@ const App: React.FC = () => {
                     element: (
                         <main className="p-4">
                             <Dashboard />
+                        </main>
+                    ),
+                },
+                {
+                    path: "recommendations",
+                    element: (
+                        <main className="p-4">
+                            <Recommendations />
                         </main>
                     ),
                 },
