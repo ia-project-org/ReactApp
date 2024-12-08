@@ -1,23 +1,12 @@
-import {
-    ColumnDef,
-    flexRender,
-    getCoreRowModel,
-    useReactTable,
-} from "@tanstack/react-table"
+import {ColumnDef, flexRender, getCoreRowModel, useReactTable,} from "@tanstack/react-table"
 
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table.tsx"
-import * as React from "react";
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "@/components/ui/table.tsx"
 import {EligibilityResult} from "@/models/Eligibility.ts";
 import {useAppContext} from "@/context/AppContext.tsx";
-import Pagination from "@/components/ui/Pagination.tsx";
-import {useState} from "react";
+import Pagination1 from "@/components/ui/Pagination.tsx";
+import {Badge} from "@/components/ui/badge.tsx";
+import {Input} from "@/components/ui/input.tsx";
+import React, {useState} from "react";
 
 
 interface DataTableProps<TData, TValue> {
@@ -40,41 +29,18 @@ export function DataTable<TData, TValue>({
         getCoreRowModel: getCoreRowModel(),
     })
 
-    const {currentPage, setCurrentPage,totalPages} = useAppContext();
-
+    const {currentPage, setCurrentPage,totalPages,setTotalPages} = useAppContext();
+    const [searchTerm, setSearchTerm] = useState<string>("");
     const handlePageChange = (page) => {
         setCurrentPage(page);
     };
+
 
     const {selectedClient} = useAppContext();
     return (
         <div className="col-span-3 bg-white shadow-md rounded-md p-6 my-4">
             <div className="flex justify-between items-center mb-4">
                 <h2 className="text-lg font-bold">Clients</h2>
-                <div className={'relative'}>
-                    <input
-                        type="text"
-                        className="bg-gray-100 rounded-md py-2 px-4 pr-8 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Name, email, etc..."
-                    />
-                    <button
-                        className="absolute top-1/2 transform -translate-y-1/2 right-3 text-gray-400 hover:text-gray-600">
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-5 w-5"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                            />
-                        </svg>
-                    </button>
-                </div>
                 <div className="flex space-x-2">
                     <button
                         className="bg-gray-100 rounded-md py-2 px-4 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
@@ -112,7 +78,16 @@ export function DataTable<TData, TValue>({
                     </button>
                 </div>
             </div>
-
+            {/* Search Bar */}
+            <div className="flex items-center justify-between mb-4">
+                <Input
+                    type="text"
+                    placeholder="Type to search..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-1/3"
+                />
+            </div>
             <div className="overflow-x-auto">
                 <Table>
                     {/* Table Header */}
@@ -142,18 +117,12 @@ export function DataTable<TData, TValue>({
                                     data-state={row.getIsSelected() && "selected"}
                                 >
                                     {row.getVisibleCells().map((cell) => {
-                                        const variantStyles = {
-                                            [EligibilityResult.Good]: "bg-green-100 text-green-500",
-                                            [EligibilityResult.Standard]: "bg-yellow-100 text-yellow-500",
-                                            [EligibilityResult.Bad]: "bg-red-100 text-red-500"
-                                        };
                                         return (
                                             <TableCell key={cell.id}>
                                                 {cell.column.id == "eligibility" ? (
-                                                    <div
-                                                        className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${variantStyles[cell.row.original.eligibility.eligibilityResult || selectedClient?.eligibility.eligibilityResult]}`}>
+                                                    <Badge variant={cell.row.original.eligibility.eligibilityResult ==="Good" ? "good" : "standard" }>
                                                         {cell.row.original.eligibility.eligibilityResult || selectedClient?.eligibility.eligibilityResult}
-                                                    </div>
+                                                    </Badge>
                                                 ) : flexRender(cell.column.columnDef.cell, cell.getContext())
                                                 }
                                             </TableCell>
@@ -173,7 +142,7 @@ export function DataTable<TData, TValue>({
                         )}
                     </TableBody>
                 </Table>
-                <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
+                <Pagination1 currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
             </div>
         </div>
     )
