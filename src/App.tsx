@@ -6,6 +6,7 @@ import React from "react";
 import Upload from "@/pages/upload.tsx";
 import Navbar from "@/components/dashboard/Navbar.tsx";
 import Login from "@/pages/login.tsx";
+import Recommendations from "@/pages/Recommendations.tsx";
 
 
 
@@ -52,6 +53,14 @@ const App: React.FC = () => {
                     element: (
                         <main className="p-4">
                             <Dashboard />
+                        </main>
+                    ),
+                },
+                {
+                    path: "recommendations",
+                    element: (
+                        <main className="p-4">
+                            <Recommendations />
                         </main>
                     ),
                 },
