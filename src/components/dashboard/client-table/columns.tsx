@@ -28,7 +28,6 @@ export const clientColumns = (onClientDetails: (client: ClientDto) => void): Col
     {
         accessorKey: "eligibility",
         header: "Eligibility",
-        cell: ({ row }) => (row.original.eligibility.eligibilityResult)
     },
     {
         id: "actions",

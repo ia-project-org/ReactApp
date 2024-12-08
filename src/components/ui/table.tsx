@@ -1,5 +1,6 @@
 import * as React from "react"
 import { cn } from "@/lib/utils"
+import {EligibilityResult} from "@/models/Eligibility.ts";
 
 const Table = React.forwardRef<
     HTMLTableElement,
@@ -37,14 +38,24 @@ TableBody.displayName = "TableBody"
 
 const TableRow = React.forwardRef<
     HTMLTableRowElement,
-    React.HTMLAttributes<HTMLTableRowElement>
->(({ className, ...props }, ref) => (
-    <tr
-        ref={ref}
-        className={cn("border-b", className)}
-        {...props}
-    />
-))
+    React.HTMLAttributes<HTMLTableRowElement> & {
+    variant?: 'default' | 'selected' | 'disabled' | 'highlighted';
+}
+>(({ className, variant = 'default', ...props }, ref) => {
+    const variantStyles = {
+        default: "border-b hover:bg-gray-50",
+        selected: "bg-blue-100 border-b border-blue-200 hover:bg-blue-150",
+        disabled: "opacity-50 cursor-not-allowed bg-gray-100",
+        highlighted: "bg-green-50 border-b border-green-200 hover:bg-green-100"
+    }
+   return (
+        <tr
+            ref={ref}
+            className={cn( variantStyles[variant], className)}
+            {...props}
+        />
+    )
+})
 TableRow.displayName = "TableRow"
 
 const TableHead = React.forwardRef<
@@ -131,7 +142,7 @@ const TableActionIcon = React.forwardRef<
     React.SVGProps<SVGSVGElement>
 >(({ className, ...props }, ref) => (
     <svg
-        ref={ref as any}
+        ref={ref as never}
         xmlns="http://www.w3.org/2000/svg"
         className={cn("h-6 w-6 text-gray-400", className)}
         fill="none"
@@ -142,28 +153,22 @@ const TableActionIcon = React.forwardRef<
 ))
 TableActionIcon.displayName = "TableActionIcon"
 
-const ScoreBadge = React.forwardRef<
-    HTMLSpanElement,
-    React.HTMLAttributes<HTMLSpanElement> & { variant?: 'Good' | 'Standard' | 'Bad' }
->(({ className, variant = 'Good', ...props }, ref) => {
-    const variantClasses = {
-        Good: 'bg-green-100 text-green-500',
-        Standard: 'bg-yellow-100 text-orange-500',
-        Bad: 'bg-red-100 text-red-500'
+const ScoreBadge: React.FC<{
+    variant: EligibilityResult;
+    children: React.ReactNode;
+}> = ({ variant, children }) => {
+    const variantStyles = {
+        [EligibilityResult.Good]: "bg-green-100 text-green-500",
+        [EligibilityResult.Standard]: "bg-yellow-100 text-yellow-500",
+        [EligibilityResult.Bad]: "bg-red-100 text-red-500"
     };
 
     return (
-        <span
-            ref={ref}
-            className={cn(
-                "px-2 py-1 rounded-full",
-                variantClasses[variant],
-                className
-            )}
-            {...props}
-        />
-    )
-})
+        <div className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${variantStyles[variant]}`}>
+            {children}
+        </div>
+    );
+};
 ScoreBadge.displayName = "ScoreBadge"
 
 const TableDetailsButton = React.forwardRef<

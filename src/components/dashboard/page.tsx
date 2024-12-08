@@ -1,22 +1,22 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import axios from "axios";
 import {DataTable} from "./client-table/data-table.tsx";
 import {ClientDto} from "@/models/Client.ts";
 import {clientColumns} from "@/components/dashboard/client-table/columns.tsx";
 import {EligibilityDto} from "@/models/Eligibility.ts";
-import {clients} from "@/models/ClientsData.ts";
-import Clients from "@/components/dashboard/client-table/Clients.tsx";
 import {ClientDetailsDto} from "@/models/ClientDetails.ts";
+import {useAppContext} from "@/context/AppContext.tsx";
 
 
-async function getData(): Promise<ClientDto[]> {
-    const response = await axios.get<ClientDto[]>(`${import.meta.env.VITE_API_URL+"clients"}`);
+async function getData(currentPage: number,setTotalPages: number): Promise<ClientDto[]> {
+    const response = await axios.get<ClientDto[]>(`${import.meta.env.VITE_API_URL+`clients?page=${currentPage}&size=3`}`);
     // Use Promise.all to concurrently fetch eligibility for all clients
     return await Promise.all(
-        response.data.map(async (client: ClientDto) => {
+        response.data.content.map(async (client: ClientDto) => {
             try {
                 const eligibility = await axios.get<EligibilityDto>(`${import.meta.env.VITE_API_URL + `eligibility/${client.clientId}`}`);
                 const details = await axios.get<ClientDetailsDto>(`${import.meta.env.VITE_API_URL + `clients/details/${client.clientId}`}`);
+                setTotalPages(response.data.totalPages)
                 return {
                     ...client,
                     eligibility: eligibility.data,
@@ -36,19 +36,29 @@ interface ClientTableProps {
     onClientDetails: (client: ClientDto) => void;
 }
 
-export default function ClientTable({ onClientDetails }: ClientTableProps) {
-    const [data, setData] = useState<ClientDto[]>([]);
+export default function ClientTable({ onClientDetails }: ClientTableProps,) {
     const [loading, setLoading] = useState(true);
+    const {
+        clients,
+        setClients,
+        currentPage,
+        setTotalPages
+    } = useAppContext();
+
+    async function fetchData() {
+        const result = await getData(currentPage,setTotalPages);
+        setClients(result);
+        setLoading(false);
+    }
+    
+    useEffect(() => {
+        fetchData().then();
+    },[]);
 
     useEffect(() => {
-        async function fetchData() {
-            const result = await getData();
-            setData(result);
-            setLoading(false);
-        }
         fetchData().then();
-    }, []);
-
+    },[currentPage]);
+    
     if (loading) {
         return <div>Loading...</div>;
     }
@@ -57,7 +67,7 @@ export default function ClientTable({ onClientDetails }: ClientTableProps) {
 
     return (
         <div className="lg:col-span-2 pr-6">
-            <DataTable columns={columns} data={data} />
+            <DataTable columns={columns} data={clients} />
         </div>
     );
 }

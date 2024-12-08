@@ -6,7 +6,6 @@ import {
 } from "@tanstack/react-table"
 
 import {
-    ScoreBadge,
     Table,
     TableBody,
     TableCell,
@@ -14,7 +13,11 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table.tsx"
-
+import * as React from "react";
+import {EligibilityResult} from "@/models/Eligibility.ts";
+import {useAppContext} from "@/context/AppContext.tsx";
+import Pagination from "@/components/ui/Pagination.tsx";
+import {useState} from "react";
 
 
 interface DataTableProps<TData, TValue> {
@@ -30,12 +33,20 @@ export function DataTable<TData, TValue>({
                                              columns,
                                              data,
                                          }: DataTableProps<TData, TValue>) {
+
     const table = useReactTable({
         data,
         columns,
         getCoreRowModel: getCoreRowModel(),
     })
 
+    const {currentPage, setCurrentPage,totalPages} = useAppContext();
+
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
+
+    const {selectedClient} = useAppContext();
     return (
         <div className="col-span-3 bg-white shadow-md rounded-md p-6 my-4">
             <div className="flex justify-between items-center mb-4">
@@ -130,17 +141,24 @@ export function DataTable<TData, TValue>({
                                     key={row.id}
                                     data-state={row.getIsSelected() && "selected"}
                                 >
-                                    {row.getVisibleCells().map((cell) => (
-                                        <TableCell key={cell.id}>
-                                            {cell.column.id == "eligibility" ? (
-                                                // Safely cast or map flexRender result to the expected type
-                                                <ScoreBadge
-                                                    variant={cell.row.original.eligibility.eligibilityResult as "Good" | "Standard" | "Bad"}
-                                                >{flexRender(cell.column.columnDef.cell, cell.getContext())}</ScoreBadge>
-                                            ) : flexRender(cell.column.columnDef.cell, cell.getContext())
-                                            }
-                                        </TableCell>
-                                    ))}
+                                    {row.getVisibleCells().map((cell) => {
+                                        const variantStyles = {
+                                            [EligibilityResult.Good]: "bg-green-100 text-green-500",
+                                            [EligibilityResult.Standard]: "bg-yellow-100 text-yellow-500",
+                                            [EligibilityResult.Bad]: "bg-red-100 text-red-500"
+                                        };
+                                        return (
+                                            <TableCell key={cell.id}>
+                                                {cell.column.id == "eligibility" ? (
+                                                    <div
+                                                        className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${variantStyles[cell.row.original.eligibility.eligibilityResult || selectedClient?.eligibility.eligibilityResult]}`}>
+                                                        {cell.row.original.eligibility.eligibilityResult || selectedClient?.eligibility.eligibilityResult}
+                                                    </div>
+                                                ) : flexRender(cell.column.columnDef.cell, cell.getContext())
+                                                }
+                                            </TableCell>
+                                        )
+                                    })}
                                 </TableRow>
                             ))
                         ) : (
@@ -155,6 +173,7 @@ export function DataTable<TData, TValue>({
                         )}
                     </TableBody>
                 </Table>
+                <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
             </div>
         </div>
     )

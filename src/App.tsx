@@ -4,8 +4,9 @@ import ClientTable from "@/components/dashboard/page.tsx";
 import './App.css'
 import React from "react";
 import Upload from "@/pages/upload.tsx";
-import HeaderUi from "@/components/dashboard/HeaderUi.tsx";
-import Statistics from "@/components/dashboard/statistics.tsx";
+import Navbar from "@/components/dashboard/Navbar.tsx";
+import Login from "@/pages/login.tsx";
+
 
 
 const RootLayout: React.FC = () => {
@@ -14,7 +15,7 @@ const RootLayout: React.FC = () => {
 
     return (
         <>
-            {currentPath !== '/' && <HeaderUi />}
+            {currentPath !== '/' && <Navbar />}
             <Outlet />
         </>
     );
@@ -28,7 +29,7 @@ const App: React.FC = () => {
             children: [
                 {
                     index: true,
-                    element: <Statistics />,
+                    element: <Login />,
                 },
                 {
                     path: "upload",

@@ -36,7 +36,6 @@ export function LoginForm() {
     })
 
     const onSubmit: SubmitHandler<LoginFormInputs> = (data) => {
-        console.log("Form Data:", data)
         navigation('/dashboard');
     }
 
