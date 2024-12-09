@@ -19,7 +19,7 @@ interface StatisticsDataType {
     value: number;
     percentage: string;
     percentageColor: string;
-    prevMonthValue: string;
+    prevMonthValue: number;
 }
 
 // const statistics = [
@@ -68,81 +68,110 @@ const Statistics = () => {
                 value:5659,
                 percentage:"+2.56%",
                 percentageColor:"text-green-500",
-                prevMonthValue:"4,96",
+                prevMonthValue:400,
             },
             {
                 title:"Good",
                 value:5659,
                 percentage:"-2.56%",
                 percentageColor:"text-red-500",
-                prevMonthValue:"4,96",
+                prevMonthValue:4,
             },
             {
                 title:"Standard",
                 value:5658,
                 percentage:"+2.56%",
                 percentageColor:"text-green-500",
-                prevMonthValue:"4,96",
+                prevMonthValue:4,
             },
             {
                 title:"Bad",
                 value:5659,
                 percentage:"-2.56%",
                 percentageColor:"text-red-500",
-                prevMonthValue:"4,96",
+                prevMonthValue:4,
             }
         ]
     );
 
-    const getNumberOfClients = async () =>{
+    const getClientsStatistics = async () =>{
         const numberOfClients = await axios.get(`${import.meta.env.VITE_API_URL + `clients/number`}`);
+        const numberOfClientsPrevMonth = await axios.get(`${import.meta.env.VITE_API_URL + `clients//number-previous-month`}`);
+        const differencePercentage : number = numberOfClientsPrevMonth.data == 0 ? 100 : (numberOfClients.data - numberOfClientsPrevMonth.data) / numberOfClientsPrevMonth.data * 100;
+
         setStatistics(prevStatistics => {
             console.log(prevStatistics);
             const updatedStatistics = [...prevStatistics];
+            
             updatedStatistics[0].value = numberOfClients.data;
+            updatedStatistics[0].percentage = differencePercentage >= 0 ? `+${differencePercentage}%` : `${differencePercentage}%`;
+            updatedStatistics[0].percentageColor = differencePercentage >= 0 ? "text-green-500" : "text-red-500";
+            updatedStatistics[0].prevMonthValue = numberOfClientsPrevMonth.data;
             return updatedStatistics;
-          });
-        console.log(numberOfClients.data);
+        });
+
+        console.log("growth" + differencePercentage);
+        console.log("number of clients" + numberOfClients.data);
+        console.log("number of clients previous month" + numberOfClientsPrevMonth.data);
     }
 
-    const getGoodEligibilityCount = async () =>{
+    const getGoodEligibilityStatistics = async () =>{
         const goodEligibilityCount = await axios.get(`${import.meta.env.VITE_API_URL + `eligibility/good-number`}`);
+        const goodEligibilityCountPrevMonth = await axios.get(`${import.meta.env.VITE_API_URL + `eligibility/good-number-previous-month`}`);
+        const differencePercentage : number = goodEligibilityCountPrevMonth.data == 0 ? 100 : (goodEligibilityCount.data - goodEligibilityCountPrevMonth.data) / goodEligibilityCountPrevMonth.data * 100;
+        
         setStatistics(prevStatistics => {
             console.log(prevStatistics);
             const updatedStatistics = [...prevStatistics];
             updatedStatistics[1].value = goodEligibilityCount.data;
+            updatedStatistics[1].percentage = differencePercentage >= 0 ? `+${differencePercentage}%` : `${differencePercentage}%`;
+            updatedStatistics[1].percentageColor = differencePercentage >= 0 ? "text-green-500" : "text-red-500";
+            updatedStatistics[1].prevMonthValue = goodEligibilityCountPrevMonth.data;
             return updatedStatistics;
           });
         console.log(goodEligibilityCount.data);
+        console.log("good eligibility count previous month" + goodEligibilityCountPrevMonth.data);
     }
 
-    const getStandardEligibilityCount = async () =>{
+    const getStandardEligibilityStatistics = async () =>{
         const standardEligibilityCount = await axios.get(`${import.meta.env.VITE_API_URL + `eligibility/standard-number`}`);
+        const standardEligibilityCountPrevMonth = await axios.get(`${import.meta.env.VITE_API_URL + `eligibility/standard-number-previous-month`}`);
+        const differencePercentage : number = standardEligibilityCountPrevMonth.data == 0 ? 100 :  (standardEligibilityCount.data - standardEligibilityCountPrevMonth.data) / standardEligibilityCountPrevMonth.data * 100;
+
         setStatistics(prevStatistics => {
             console.log(prevStatistics);
             const updatedStatistics = [...prevStatistics];
             updatedStatistics[2].value = standardEligibilityCount.data;
+            updatedStatistics[2].percentage = differencePercentage >= 0 ? `+${differencePercentage}%` : `${differencePercentage}%`;
+            updatedStatistics[2].percentageColor = differencePercentage >= 0 ? "text-green-500" : "text-red-500";
+            updatedStatistics[2].prevMonthValue = standardEligibilityCountPrevMonth.data;
             return updatedStatistics;
           });
         console.log(standardEligibilityCount.data);
     }
 
-    const getPoorEligibilityCount = async () =>{
+    const getPoorEligibilityStatistics = async () =>{
         const poorEligibilityCount = await axios.get(`${import.meta.env.VITE_API_URL + `eligibility/poor-number`}`);
+        const poorEligibilityCountPrevMonth = await axios.get(`${import.meta.env.VITE_API_URL + `eligibility/poor-number-previous-month`}`);
+        const differencePercentage : number = poorEligibilityCountPrevMonth.data == 0 ? 100 :  (poorEligibilityCount.data - poorEligibilityCountPrevMonth.data) / poorEligibilityCountPrevMonth.data * 100;
+
         setStatistics(prevStatistics => {
             console.log(prevStatistics);
             const updatedStatistics = [...prevStatistics];
             updatedStatistics[3].value = poorEligibilityCount.data;
+            updatedStatistics[3].percentage = differencePercentage >= 0 ? `+${differencePercentage}%` : `${differencePercentage}%`;
+            updatedStatistics[3].percentageColor = differencePercentage >= 0 ? "text-green-500" : "text-red-500";
+            updatedStatistics[3].prevMonthValue = poorEligibilityCountPrevMonth.data;
             return updatedStatistics;
           });
         console.log(poorEligibilityCount.data);
     }
 
     React.useEffect(() => {
-        getNumberOfClients();
-        getGoodEligibilityCount();
-        getStandardEligibilityCount();
-        getPoorEligibilityCount();
+        getClientsStatistics();
+        getGoodEligibilityStatistics();
+        getStandardEligibilityStatistics();
+        getPoorEligibilityStatistics();
     },[]);
 
     return (

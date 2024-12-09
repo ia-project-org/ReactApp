@@ -3,10 +3,10 @@ import React from 'react';
 
 interface DashboardCardProps {
     title: string;
-    value: string;
+    value: number;
     percentage: string;
     percentageColor: string;
-    prevMonthValue: string;
+    prevMonthValue: number;
     icon: React.ReactNode;
 }
 
@@ -32,7 +32,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
             </div>
             <div className="items-center justify-around flex mt-2 text-sm text-gray-500">
                 <img src={'ArrowUpwardRounded.svg'} alt={''}/>
-                <p>{prevMonthValue} vs last month</p>
+                <p>vs {prevMonthValue} last month</p>
             </div>
         </div>
     );
