@@ -47,10 +47,10 @@ export function LoginForm() {
                     <img
                         src="./src/assets/logo.png"
                         alt="App logo"
-                        className="w-16"
+                        className="w-42"
                     />
                 </div>
-                <CardTitle className="text-2xl">Welcome back to Logoipsum</CardTitle>
+                <CardTitle className="text-2xl">Welcome back to Credify</CardTitle>
                 <CardDescription>
                     Enter your username and password to continue
                 </CardDescription>

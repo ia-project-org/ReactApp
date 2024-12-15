@@ -6,15 +6,18 @@ import Login from './pages/login.tsx';
 import './App.css'
 import React from "react";
 import Upload from "@/pages/upload.tsx";
+import Homepage from './pages/homepage.tsx';
 
 
 const RootLayout: React.FC = () => {
     const location = useLocation();
     const currentPath = location.pathname;
 
+    const excludedPaths = ['/', '/homepage'];
+
     return (
         <>
-            {currentPath !== '/' && <Navbar />}
+            {!excludedPaths.includes(currentPath) && <Navbar />}
             <Outlet />
         </>
     );
@@ -51,6 +54,14 @@ const App: React.FC = () => {
                     element: (
                         <main className="p-4">
                             <Dashboard />
+                        </main>
+                    ),
+                },
+                {
+                    path: "homepage",
+                    element: (
+                        <main className="p-4">
+                            <Homepage />
                         </main>
                     ),
                 },
