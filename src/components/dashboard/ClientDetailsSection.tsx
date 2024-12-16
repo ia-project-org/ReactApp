@@ -46,8 +46,8 @@ export function ClientDetailsSection({
                                      }: ClientDetailsSectionProps) {
     // Memoize derived values to prevent unnecessary re-renders
     const clientProgress = useMemo(() =>
-            selectedClient?.score ? Number(selectedClient.score.toFixed(1)) : 0,
-        [selectedClient?.score]
+            selectedClient?.details.score ? Number(selectedClient?.details.score.toFixed(1)) : 0,
+        [selectedClient?.details.score]
     );
 
     return (

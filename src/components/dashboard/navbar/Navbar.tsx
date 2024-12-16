@@ -6,6 +6,7 @@ import {useAppContext} from "@/context/AppContext.tsx";
 import {useAuth} from "@/keycloak/Authentification.tsx";
 import {NotificationDropdown} from "@/components/dashboard/NotificationDropdown.tsx";
 import {getNotifications} from "@/api/_callApi.ts";
+import {jwtDecode} from "jwt-decode";
 
 const ROUTES = [
     { name: 'Dashboard', path: '/dashboard' },
@@ -22,17 +23,17 @@ const UserAvatar = ({ username }: { username: string }) => {
 
     return (
         <div className="relative w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white">
-            <span className="text-sm">{initials}</span>
+            <span className="text-xl">{initials}</span>
         </div>
     );
 };
 
 
 const Navbar: React.FC = () => {
-    const { connectedAgent } = useAppContext();
     const navigation = useNavigate();
     const location = useLocation();
-    const {signOut} = useAuth();
+    const {signOut,getToken} = useAuth();
+    const username = getToken()&&jwtDecode(getToken()).name;
     // State for notifications and dropdown
     const [notifications, setNotifications] = useState<Notification[]>([]);
     const [showNotifications, setShowNotifications] = useState(false);
@@ -55,8 +56,6 @@ const Navbar: React.FC = () => {
             console.error('Error in fetching notifications:', error);
         }
     };
-    const firstName = connectedAgent?.username.split(' ')[0] || 'User';
-    const lastName = connectedAgent?.username.split(' ')[1] || 'User';
     // WebSocket notification setup (similar to previous suggestion)
     React.useEffect(() => {
         fetchNotifications().then();
@@ -126,8 +125,8 @@ const Navbar: React.FC = () => {
                 </button>
 
                 {/* User Avatar */}
-                {connectedAgent?.username && (
-                    <UserAvatar username={connectedAgent.username}/>
+                {username && (
+                    <UserAvatar username={username}/>
                 )}
             </div>
         </nav>

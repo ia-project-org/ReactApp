@@ -10,6 +10,7 @@ import Navbar from "@/components/dashboard/navbar/Navbar.tsx";
 import {useAuth} from "@/keycloak/Authentification.tsx";
 import axiosInstance from "@/api/axiosInstance.ts";
 import Recommendations from "@/pages/Recommendations.tsx";
+import {useAppContext} from "@/context/AppContext.tsx";
 
 
 const RootLayout: React.FC = () => {
@@ -27,11 +28,11 @@ const RootLayout: React.FC = () => {
 };
 
 const PrivateRoute: React.FC<{ element: JSX.Element }> = ({ element }) => {
-    const {getToken,useTokenCheck} = useAuth();
-    useTokenCheck();
+    const {getToken} = useAuth();
     if (getToken()==null) {
         return <Navigate to="/" replace />;
     }
+
     return element; // Render element if authenticated
 };
 

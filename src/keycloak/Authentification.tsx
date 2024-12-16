@@ -243,7 +243,6 @@ const Authentification: React.FC<{ children: ReactNode }> = ({ children }) => {
                         // Retry the original request
                         return axiosInstance(originalRequest);
                     } catch (refreshError) {
-                        
                         // Force logout if refresh fails
                         await signOut();
                         return Promise.reject(refreshError);
