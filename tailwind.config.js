@@ -16,7 +16,17 @@ export default {
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
-  			card: {
+			"text-primary": "rgba(0, 0, 0, 0.87)",
+			"components-avatar-fill": "#bdbdbd",
+			"background-paper-elevation-0": "#fff",
+			"info-main": "#0288d1",
+			"info-contrasttext": "#fff",
+			"primary-contrasttext": "#fff",
+			"dodgerblue": "#1976d2",
+			"gainsboro": "#e5e5ea",
+			"text-secondary": "rgba(0, 0, 0, 0.6)",
+
+			card: {
   				DEFAULT: 'hsl(var(--card))',
   				foreground: 'hsl(var(--card-foreground))'
   			},
@@ -54,8 +64,17 @@ export default {
   				'4': 'hsl(var(--chart-4))',
   				'5': 'hsl(var(--chart-5))'
   			}
-  		}
-  	}
+  		},
+		"fontFamily": {
+			"typography-body1": "Roboto"
+		}
+  	},
+	  "fontSize": {
+		  "base": "16px",
+		  "xl": "20px",
+		  "inherit": "inherit"
+
+	  }
   },
   plugins: [require("tailwindcss-animate")],
 }

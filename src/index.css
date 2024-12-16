@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  @apply leading-[normal] m-0;
+}
+*, ::before, ::after { border-width: 0; }
 :root {
   @apply h-full;
 }
