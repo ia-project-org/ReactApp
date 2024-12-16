@@ -24,41 +24,38 @@ interface StatisticsDataType {
 }
 
 const Statistics = () => {
-
-    const Auth = useAuth();
-    const accessToken = Auth.getToken();
     const [statistics, setStatistics] = React.useState<StatisticsDataType[]>(
         [
             {
                 title:"Total clients",
-                value:5659,
+                value:0,
                 percentage:"+2.56%",
                 percentageColor:"text-green-500",
-                prevMonthValue:400,
+                prevMonthValue: 0,
                 percentChart: 0,
             },
             {
                 title:"Good",
-                value:5659,
+                value:0,
                 percentage:"-2.56%",
                 percentageColor:"text-red-500",
-                prevMonthValue:4,
+                prevMonthValue:0,
                 percentChart: 0,
             },
             {
                 title:"Standard",
-                value:5658,
+                value:0,
                 percentage:"+2.56%",
                 percentageColor:"text-green-500",
-                prevMonthValue:4,
+                prevMonthValue:0,
                 percentChart: 0,
             },
             {
-                title:"Bad",
-                value:5659,
+                title:"Poor",
+                value: 0,
                 percentage:"-2.56%",
                 percentageColor:"text-red-500",
-                prevMonthValue:4,
+                prevMonthValue:0,
                 percentChart: 0,
             }
         ]);

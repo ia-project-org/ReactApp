@@ -5,13 +5,10 @@ import axiosInstance from "@/api/axiosInstance.ts";
 import {Notification} from "@/models/Notification.ts";
 
 
-
-
 export async function getData(currentPage: number,setTotalPages: never,size: number): Promise<ClientDto[]> {
     const response = await axiosInstance.get<ClientDto[]>(
         `${import.meta.env.VITE_API_URL}clients?page=${currentPage}&size=${size}`
     );
-
     return await Promise.all(
         response.data.content.map(async (client: ClientDto) => {
             try {

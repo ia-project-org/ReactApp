@@ -36,7 +36,7 @@ function Homepage(){
               </ul>
 
               <div className="flex space-x-4">
-                <button onClick={() => navigate("/")} className="px-6 py-2 text-[#73E9F4] text-lg font-semibold bg-transparent border-2 border-[#73E9F4] rounded-full hover:bg-[#73E9F4] hover:text-[#013A40] transition duration-300">
+                <button onClick={() => navigate("/login")} className="px-6 py-2 text-[#73E9F4] text-lg font-semibold bg-transparent border-2 border-[#73E9F4] rounded-full hover:bg-[#73E9F4] hover:text-[#013A40] transition duration-300">
                   Login
                 </button>
                 <a href="#contact" className="px-6 py-2 text-[#013A40] text-lg font-semibold bg-[#73E9F4] rounded-full hover:bg-white hover:text-[#013A40] transition duration-300">

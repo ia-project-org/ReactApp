@@ -4,7 +4,8 @@ import { useAppContext } from "@/context/AppContext.tsx";
 import Pagination1 from "@/components/ui/Pagination.tsx";
 import { Badge } from "@/components/ui/badge.tsx";
 import { Input } from "@/components/ui/input.tsx";
-import React, { useState, useMemo } from "react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx";
+import { useState, useMemo } from "react";
 import { Tabs, TabsContent } from "@radix-ui/react-tabs";
 
 interface DataTableProps<TData, TValue> {
@@ -18,25 +19,32 @@ export function DataTable<TData, TValue>({
                                          }: DataTableProps<TData, TValue>) {
     const { selectedClient, currentPage, setCurrentPage, totalPages } = useAppContext();
     const [searchTerm, setSearchTerm] = useState<string>("");
-    const [filter, setFilter] = useState<string>("");
+    const [eligibilityFilter, setEligibilityFilter] = useState<string>("All");
 
-    // Implement search functionality
+    // Implement search and filter functionality
     const filteredData = useMemo(() => {
-        if (!searchTerm) return data;
-        const lowercaseSearchTerm = searchTerm.toLowerCase();
-        return data.filter(item =>
-            Object.values(item).some(value =>
-                typeof value === 'string' &&
-                value.toLowerCase().includes(lowercaseSearchTerm) ||
-                (typeof value === 'object' && value !== null &&
-                    Object.values(value).some(nestedValue =>
-                        typeof nestedValue === 'string' &&
-                        nestedValue.toLowerCase().includes(lowercaseSearchTerm)
+        return data.filter(item => {
+            // Search filter
+            const matchesSearch = !searchTerm ||
+                Object.values(item).some(value =>
+                    typeof value === 'string' &&
+                    value.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    (typeof value === 'object' && value !== null &&
+                        Object.values(value).some(nestedValue =>
+                            typeof nestedValue === 'string' &&
+                            nestedValue.toLowerCase().includes(searchTerm.toLowerCase())
+                        )
                     )
-                )
-            )
-        );
-    }, [data, searchTerm]);
+                );
+
+            // Eligibility filter
+            const matchesEligibility =
+                eligibilityFilter === "All" ||
+                (item.eligibility?.eligibilityResult === eligibilityFilter);
+
+            return matchesSearch && matchesEligibility;
+        });
+    }, [data, searchTerm, eligibilityFilter]);
 
     const table = useReactTable({
         data: filteredData,
@@ -54,17 +62,32 @@ export function DataTable<TData, TValue>({
                 <h2 className="text-lg font-bold">Clients</h2>
             </div>
             <Tabs defaultValue="">
-                <TabsContent value={filter}>
-                    {/* Search Bar */}
-                    <div className="flex items-center justify-between mb-4">
+                <TabsContent value="">
+                    {/* Search and Filter Section */}
+                    <div className="flex items-center justify-between mb-4 space-x-4">
                         <Input
                             type="text"
-                            placeholder="Type to search..."
+                            placeholder="Search clients..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-1/3"
+                            className="w-1/2"
                         />
+                        <Select
+                            value={eligibilityFilter}
+                            onValueChange={setEligibilityFilter}
+                        >
+                            <SelectTrigger className="w-[180px]">
+                                <SelectValue placeholder="Eligibility Status" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="All">All Statuses</SelectItem>
+                                <SelectItem value="Good">Good</SelectItem>
+                                <SelectItem value="Standard">Standard</SelectItem>
+                                <SelectItem value="Poor">Poor</SelectItem>
+                            </SelectContent>
+                        </Select>
                     </div>
+
                     <div className="overflow-x-auto">
                         <Table>
                             {/* Table Header */}
@@ -117,17 +140,26 @@ export function DataTable<TData, TValue>({
                                             colSpan={columns.length}
                                             className="h-24 text-center"
                                         >
-                                            {searchTerm ? "No results found" : "No data available"}
+                                            {searchTerm || eligibilityFilter !== "All"
+                                                ? "No results found"
+                                                : "No data available"}
                                         </TableCell>
                                     </TableRow>
                                 )}
                             </TableBody>
                         </Table>
-                        <Pagination1
-                            currentPage={currentPage}
-                            totalPages={totalPages}
-                            onPageChange={handlePageChange}
-                        />
+
+                        {/* Pagination */}
+                        <div className="mt-4 flex justify-between items-center">
+                            <span className="text-sm text-gray-600">
+                                {filteredData.length} client(s) found
+                            </span>
+                            <Pagination1
+                                currentPage={currentPage}
+                                totalPages={totalPages}
+                                onPageChange={handlePageChange}
+                            />
+                        </div>
                     </div>
                 </TabsContent>
             </Tabs>

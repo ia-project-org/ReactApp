@@ -16,7 +16,7 @@ const RootLayout: React.FC = () => {
     const location = useLocation();
     const currentPath = location.pathname;
 
-    const excludedPaths = ['/', '/homepage'];
+    const excludedPaths = ['/', '/login'];
 
     return (
         <>
@@ -27,16 +27,16 @@ const RootLayout: React.FC = () => {
 };
 
 const PrivateRoute: React.FC<{ element: JSX.Element }> = ({ element }) => {
-    const {userIsAuthenticated} = useAuth();
-
-    if (!userIsAuthenticated()) {
-        return <Navigate to="/login" replace />;
+    const {getToken,useTokenCheck} = useAuth();
+    useTokenCheck();
+    if (getToken()==null) {
+        return <Navigate to="/" replace />;
     }
     return element; // Render element if authenticated
 };
 
 const App: React.FC = () => {
-    const {useTokenCheck,userIsAuthenticated,refreshToken,signOut,setupAxiosInterceptors} = useAuth();
+    const {useTokenCheck,setupAxiosInterceptors} = useAuth();
 
     // Check token on app initialization
     useTokenCheck();
@@ -44,22 +44,6 @@ const App: React.FC = () => {
     // Setup axios interceptors
     useEffect(() => {
         setupAxiosInterceptors(axiosInstance);
-        // Vérification périodique du token
-        const checkTokenValidity = async () => {
-            if (userIsAuthenticated()) {
-                try {
-                    await refreshToken();
-                } catch (error) {
-                    // Déconnexion si refresh impossible
-                    signOut();
-                }
-            }
-        };
-
-        // Vérification toutes les heures par exemple
-        const intervalId = setInterval(checkTokenValidity, 3600000);
-
-        return () => clearInterval(intervalId);
     }, []);
 
     const router = createBrowserRouter([
@@ -73,11 +57,7 @@ const App: React.FC = () => {
                 },
                 {
                     path: "upload",
-                    element: <PrivateRoute element={ <main><Upload /></main>} />,
-                },
-                {
-                    path: "table",
-                    element: <PrivateRoute element={ <main className="p-4"><ClientTable /></main>} />,
+                    element: <PrivateRoute element={ <main className="p-4"><Upload /></main>} />,
                 },
                 {
                     path: "dashboard",
@@ -89,9 +69,7 @@ const App: React.FC = () => {
                 },
                 {
                     path: "login",
-                    element: (
-                            <Login />
-                    ),
+                    element: (<Login />),
                 },
                 {
                     path: "*",

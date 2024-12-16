@@ -1,8 +1,7 @@
-import React, {useCallback, useState} from 'react';
+import {useCallback, useState} from 'react';
 import {SubmitHandler, useForm} from "react-hook-form";
 import {useNavigate} from 'react-router-dom';
 import * as Toast from "@radix-ui/react-toast";
-
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
 import {Input} from "@/components/ui/input";
 import {Checkbox} from "@/components/ui/checkbox";
@@ -19,7 +18,7 @@ type LoginFormInputs = {
 export function LoginForm() {
     const navigation = useNavigate();
     const [loginError, setLoginError] = useState<string | null>(null);
-    const Auth = useAuth();
+    const {userLogin} = useAuth();
 
     const form = useForm<LoginFormInputs>({
         defaultValues: {
@@ -31,14 +30,14 @@ export function LoginForm() {
 
     const onSubmit = useCallback<SubmitHandler<LoginFormInputs>>(async (data) => {
         try {
-            const user = await Auth.userLogin(data.username, data.password);
+            const user = await userLogin(data.username, data.password);
             if (user) {
                 navigation('/dashboard');
             }
         } catch (error) {
             setLoginError("Incorrect username or password");
         }
-    }, [Auth, navigation]);
+    }, [navigation]);
 
     const handleCloseToast = () => setLoginError(null);
 
@@ -48,7 +47,7 @@ export function LoginForm() {
                 <CardHeader className="mb-5">
                     <div className="flex justify-center mb-4">
                         <img
-                            src="../assets/logo.png"
+                            src="./src/assets/logo.png"
                             alt="App logo"
                             className="w-42"
                         />

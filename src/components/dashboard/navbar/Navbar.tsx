@@ -64,9 +64,13 @@ const Navbar: React.FC = () => {
     return (
         <nav className="relative flex justify-between items-center bg-white py-4 px-6 shadow-md">
             {/* Left side - Welcome message */}
-            <h1 className="text-2xl font-bold">
-                Welcome back, {firstName} {lastName}
-            </h1>
+            <div className="flex items-center">
+                <img
+                    src="./src/assets/logo.png"
+                    alt="App logo"
+                    className="w-[191.5px] h-[46px]"
+                />
+            </div>
 
             {/* Middle - Navigation Routes */}
             <div className="flex items-center space-x-4">

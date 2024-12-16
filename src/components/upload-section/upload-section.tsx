@@ -105,7 +105,7 @@ const FileUploader = () => {
             <CircleLoader className='absolute' color={'rgb(59, 130, 246)'} size={200} />
           </div>)}
           <div className="text-center">
-            <h2 className="text-xl font-bold text-gray-800 mb-2">Upload a CSV File</h2>
+            <h2 className="text-xl font-bold text-gray-800 mb-2">Upload your clients datasets (csv)</h2>
             <p className="text-sm text-gray-600 max-w-md mx-auto">
               Ensure your file contains contact name and phone number.
               Files with up to 1,000 rows work best.
