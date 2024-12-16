@@ -1,22 +1,26 @@
-import React, {useEffect} from "react";
-import {createBrowserRouter, Navigate, Outlet, RouterProvider, useLocation} from "react-router-dom";
+import {createBrowserRouter, Navigate, Outlet, RouterProvider, useLocation} from 'react-router-dom';
 import Dashboard from "@/components/dashboard/Dashboard.tsx";
 import ClientTable from "@/components/dashboard/page.tsx";
-import './App.css';
+import Login from './pages/login.tsx';
+import './App.css'
+import React, {useEffect} from "react";
 import Upload from "@/pages/upload.tsx";
+import Homepage from './pages/homepage.tsx';
 import Navbar from "@/components/dashboard/navbar/Navbar.tsx";
-import Login from "@/pages/login.tsx";
-import Recommendations from "@/pages/Recommendations.tsx";
 import {useAuth} from "@/keycloak/Authentification.tsx";
 import axiosInstance from "@/api/axiosInstance.ts";
+import Recommendations from "@/pages/Recommendations.tsx";
+
 
 const RootLayout: React.FC = () => {
     const location = useLocation();
     const currentPath = location.pathname;
 
+    const excludedPaths = ['/', '/homepage'];
+
     return (
         <>
-            {currentPath !== '/' && <Navbar />}
+            {!excludedPaths.includes(currentPath) && <Navbar />}
             <Outlet />
         </>
     );
@@ -26,13 +30,12 @@ const PrivateRoute: React.FC<{ element: JSX.Element }> = ({ element }) => {
     const {userIsAuthenticated} = useAuth();
 
     if (!userIsAuthenticated()) {
-        return <Navigate to="/" replace />;
+        return <Navigate to="/login" replace />;
     }
     return element; // Render element if authenticated
 };
 
 const App: React.FC = () => {
-
     const {useTokenCheck,userIsAuthenticated,refreshToken,signOut,setupAxiosInterceptors} = useAuth();
 
     // Check token on app initialization
@@ -66,7 +69,7 @@ const App: React.FC = () => {
             children: [
                 {
                     index: true,
-                    element: <Login />,
+                    element: <Homepage />,
                 },
                 {
                     path: "upload",
@@ -83,6 +86,12 @@ const App: React.FC = () => {
                 {
                     path: "recommendations",
                     element: <PrivateRoute element={<main className="p-4"><Recommendations /></main>} />,
+                },
+                {
+                    path: "login",
+                    element: (
+                            <Login />
+                    ),
                 },
                 {
                     path: "*",

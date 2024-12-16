@@ -45,15 +45,15 @@ export function LoginForm() {
     return (
         <Toast.Provider swipeDirection="right">
             <Card className="mx-auto max-w-md w-full px-4 py-6">
-                <CardHeader className="text-center">
+                <CardHeader className="mb-5">
                     <div className="flex justify-center mb-4">
                         <img
-                            src="./src/assets/logo.png"
+                            src="../assets/logo.png"
                             alt="App logo"
-                            className="w-16 h-16 object-contain"
+                            className="w-42"
                         />
                     </div>
-                    <CardTitle className="text-2xl mb-2">Welcome back to Logoipsum</CardTitle>
+                    <CardTitle className="text-2xl">Welcome back to Credify</CardTitle>
                     <CardDescription>
                         Enter your username and password to continue
                     </CardDescription>

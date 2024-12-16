@@ -15,7 +15,7 @@ function Login() {
                     p-2
                     text-opacity-50"
                 >
-                    <p className="text-xs">© Logoipsum Inc. All rights reserved</p>
+                    <p className="text-xs">© Credify Inc. All rights reserved</p>
                     <p className="text-xs">Contact support</p>
                 </footer>
             </div>
