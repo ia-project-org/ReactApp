@@ -69,12 +69,6 @@ export default {
 			"typography-body1": "Roboto"
 		}
   	},
-	  "fontSize": {
-		  "base": "16px",
-		  "xl": "20px",
-		  "inherit": "inherit"
-
-	  }
   },
   plugins: [require("tailwindcss-animate")],
 }

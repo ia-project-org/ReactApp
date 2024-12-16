@@ -71,18 +71,18 @@ function Homepage(){
 
 
     <section id="about" className="w-screen">
-        <div className="h-[500px] flex flex-row justify-between items-center bg-[#0F3C41] px-20 py-10 gap-16">
+        <div className="h-[500px] flex flex-row justify-between items-center bg-[#0F3C41] px-24 py-10 gap-16">
           <div className="flex-shrink-0">
             <img
               alt="Hand reaching for our logo"
               src="./src/assets/about-us.png"
-              className="w-[350px] h-[350px] object-contain"
+              className="w-[300px] h-[300px] object-contain"
             />
           </div>
 
-          <div className="flex flex-col max-w-[1000px] text-left">
+          <div className="flex flex-col max-w-[950px] text-left">
             <h2 className="text-[#0094A2] font-bold text-4xl mb-4">About Us</h2>
-            <p className="text-lg font-semibold text-[#FFFFFF] mb-6">
+            <p className="text-xl font-semibold text-[#FFFFFF] mb-6">
               Transforming Credit Decision-Making with Technology and Innovation
             </p>
             <div className="text-[#B4E3E6] text-base leading-relaxed space-y-4">
@@ -93,9 +93,6 @@ function Homepage(){
                 With a focus on innovation and transparency, our team is committed to providing tools that simplify complex processes. Our solution not only improves efficiency but also builds trust between banks and their customers by delivering accurate and personalized credit recommendations.
               </p>
             </div>
-            <button className="mt-6 w-[270px] px-8 py-2 bg-[#021012] text-[#B4E3E6] font-semibold rounded-md hover:bg-[#0A2E33] transition duration-300">
-              Read More
-            </button>
           </div>
         </div>
     </section>
