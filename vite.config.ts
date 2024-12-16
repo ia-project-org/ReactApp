@@ -4,10 +4,16 @@ import * as path from "node:path";
 
 // https://vitejs.dev/config/
   export default defineConfig({
-  plugins: [react()],
+    plugins: [react()],
+    define: {
+      'global': 'window',
+      'process.env': {}
+    },
     resolve: {
       alias: {
         "@": path.resolve(__dirname, "./src"),
+        'global': 'window',
+        'process': 'process/browser'
       },
     },
     test: {
@@ -24,5 +30,7 @@ import * as path from "node:path";
         input: './src/main.tsx',
       },
     },
-
+    optimizeDeps: {
+      include: ['sockjs-client']
+    }
 });

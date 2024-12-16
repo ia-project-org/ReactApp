@@ -1,39 +1,14 @@
-import React, { useState } from "react";
-import {
-    Table,
-    TableHeader,
-    TableBody,
-    TableRow,
-    TableCell,
-    TableHead,
-} from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs.tsx";
-import { Input } from "@/components/ui/input";
-import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
-
-interface Client {
-    id: number;
-    name: string;
-    phone: string;
-    email: string;
-    score: "Good" | "Standard";
-}
-
-// Mock Client Data
-const mockClients: Client[] = [
-    { id: 1654, name: "John Doe", phone: "0612345678", email: "ken99@yahoo.com", score: "Good" },
-    { id: 654, name: "John Doe", phone: "0612345678", email: "abe45@gmail.com", score: "Standard" },
-    { id: 655, name: "Jane Doe", phone: "0612345679", email: "jane99@gmail.com", score: "Good" },
-    { id: 789, name: "Alice Smith", phone: "0612345680", email: "alice.smith@example.com", score: "Good" },
-    { id: 890, name: "Bob Johnson", phone: "0612345681", email: "bob.johnson@example.com", score: "Standard" },
-    { id: 123, name: "Charlie Brown", phone: "0612345682", email: "charlie.brown@example.com", score: "Good" },
-    { id: 456, name: "Diana Prince", phone: "0612345683", email: "diana.prince@example.com", score: "Standard" },
-    { id: 7890, name: "Edward Cullen", phone: "0612345684", email: "edward.cullen@example.com", score: "Good" },
-    { id: 1122, name: "Fiona Apple", phone: "0612345685", email: "fiona.apple@example.com", score: "Standard" },
-    { id: 3344, name: "George Martin", phone: "0612345686", email: "george.martin@example.com", score: "Good" },
-];
+import React, {useEffect, useState} from "react";
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "@/components/ui/table";
+import {Button} from "@/components/ui/button";
+import {Badge} from "@/components/ui/badge";
+import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs.tsx";
+import {Input} from "@/components/ui/input";
+import Pagination1 from "@/components/ui/pagination";
+import {useAppContext} from "@/context/AppContext.tsx";
+import {getData} from "@/api/_callApi.ts";
+import {useNavigate} from "react-router-dom";
+import {AgentRecommendationModal} from "@/pages/RecommendAction.tsx";
 
 
 const Recommendations: React.FC = () => {
@@ -41,9 +16,10 @@ const Recommendations: React.FC = () => {
     const [selectedRows, setSelectedRows] = useState<number[]>([]);
     const [selectAll, setSelectAll] = useState(false);
     const [searchTerm, setSearchTerm] = useState<string>("");
-    const [currentPage, setCurrentPage] = useState(1); // Current page
-    const rowsPerPage = 6;
+    const {setSelectedClient,clients,setClients,totalPages,setTotalPages,currentPage, setCurrentPage} = useAppContext();
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
+    const navigation = useNavigate();
     // Handle individual row selection
     const handleRowSelect = (id: number) => {
         setSelectedRows((prev) =>
@@ -56,27 +32,48 @@ const Recommendations: React.FC = () => {
         if (selectAll) {
             setSelectedRows([]); // Deselect all rows
         } else {
-            setSelectedRows(mockClients.map((client) => client.id)); // Select all rows
+            setSelectedRows(clients.map((client) => client.clientId)); // Select all rows
         }
         setSelectAll(!selectAll);
+    };
+
+    const handleRecommend = (agents) => {
+        // Logique de recommandation
+        console.log('Agents recommandés:', agents);
+        // Vous pouvez ajouter ici l'appel API pour recommander les agents
+    };
+
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
     };
 
     // Check if a specific row is selected
     const isRowSelected = (id: number) => selectedRows.includes(id);
 
+    async function fetchData() {
+        const result = await getData(currentPage,setTotalPages,3);
+        setClients(result);
+    }
+
+    useEffect(()=>{
+        fetchData().then();
+    },[currentPage])
+
     // Filter clients by search term
-    const filteredClients = mockClients.filter(
+    const filteredClients = clients.filter(
         (client) =>
-            client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            client.phone.includes(searchTerm) ||
-            client.email.toLowerCase().includes(searchTerm)
+            (filter === "View-All" ||
+            (filter === "Auto-Loan" && client.details.auto_loan === 1) ||
+            (filter === "Credit-builder Loan" && client.details.credit_builder_loan === 1) ||
+            (filter === "Debt Consolidation Loan" && client.details.debt_consolidation_loan === 1)) &&
+            (client.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                client.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                client.phoneNumber.includes(searchTerm) ||
+                client.email.toLowerCase().includes(searchTerm) ||
+                client.cin.toLowerCase().includes(searchTerm))
     );
 
-    const totalPages = Math.ceil(filteredClients.length / rowsPerPage);
-    const paginatedClients = filteredClients.slice(
-        (currentPage - 1) * rowsPerPage,
-        currentPage * rowsPerPage
-    );
+
 
     return (
         <div className="container mx-auto">
@@ -168,35 +165,45 @@ const Recommendations: React.FC = () => {
                                         <TableHead className="text-center">Full Name</TableHead>
                                         <TableHead className="text-center">Phone Number</TableHead>
                                         <TableHead className="text-center">Contact Information</TableHead>
-                                        <TableHead className="text-center">Score</TableHead>
+                                        <TableHead className="text-center">Eligibility</TableHead>
                                         <TableHead className="text-center">Actions</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {paginatedClients.map((client) => (
-                                        <TableRow key={client.id} className={isRowSelected(client.id) ? "bg-gray-100" : ""}>
+                                    {filteredClients.map((client) => (
+                                        <TableRow key={client.clientId} className={isRowSelected(client.clientId) ? "bg-gray-100" : ""}>
                                             <TableCell>
                                                 <input
                                                     type="checkbox"
-                                                    checked={isRowSelected(client.id)}
-                                                    onChange={() => handleRowSelect(client.id)}
+                                                    checked={isRowSelected(client.clientId)}
+                                                    onChange={() => handleRowSelect(client.clientId)}
                                                 />
                                             </TableCell>
-                                            <TableCell>{client.id}</TableCell>
-                                            <TableCell>{client.name}</TableCell>
-                                            <TableCell>{client.phone}</TableCell>
+                                            <TableCell>{client.clientId}</TableCell>
+                                            <TableCell>{client.firstName }  {client.lastName}</TableCell>
+                                            <TableCell>{client.phoneNumber}</TableCell>
                                             <TableCell>{client.email}</TableCell>
                                             <TableCell>
                                                 <Badge
-                                                    variant={client.score === "Good" ? "good" : "standard"}
+                                                    variant={client.eligibility.eligibilityResult === "Good" ? "good" : "standard"}
                                                 >
-                                                    {client.score}
+                                                    {client.eligibility.eligibilityResult}
                                                 </Badge>
                                             </TableCell>
                                             <TableCell>
                                                 <div className="flex justify-center items-center space-x-2 center">
-                                                    <Button variant="default">Recommend</Button>
-                                                    <Button variant="default">Details</Button>
+                                                    <Button className='bg-blue-500 text-white font-semibold rounded-lg
+                                                        hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500
+                                                        focus:ring-offset-2 transition-colors duration-300' variant="default"
+                                                            onClick={() => setIsModalOpen(true)}
+                                                    >
+                                                        Recommend</Button>
+                                                    <Button className={'bg-blue-500 text-white font-semibold rounded-lg\n' +
+                                                        '               hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500\n' +
+                                                        '               focus:ring-offset-2 transition-colors duration-300'} onClick={()=>{
+                                                        setSelectedClient(client);
+                                                        navigation('/dashboard');
+                                                    }} variant="default">Details</Button>
                                                 </div>
                                             </TableCell>
                                         </TableRow>
@@ -209,48 +216,17 @@ const Recommendations: React.FC = () => {
                                 ? `${selectedRows.length} row(s) selected.`
                                 : "No rows selected."}
                         </div>
-                        <div className="flex justify-between items-center mt-4">
-                            <Pagination className="mt-4">
-                                <PaginationContent>
-                                    {/* Previous Button */}
-                                    <PaginationItem>
-                                        <PaginationPrevious
-                                            onClick={() =>
-                                                setCurrentPage((prev) => (prev > 1 ? prev - 1 : prev))
-                                            }
-                                            className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
-                                        />
-                                    </PaginationItem>
-
-                                    {/* Page Numbers */}
-                                    {Array.from({ length: totalPages }, (_, index) => (
-                                        <PaginationItem key={index}>
-                                            <PaginationLink
-                                                isActive={currentPage === index + 1}
-                                                onClick={() => setCurrentPage(index + 1)}
-                                            >
-                                                {index + 1}
-                                            </PaginationLink>
-                                        </PaginationItem>
-                                    ))}
-
-                                    {/* Next Button */}
-                                    <PaginationItem>
-                                        <PaginationNext
-                                            onClick={() =>
-                                                setCurrentPage((prev) => (prev < totalPages ? prev + 1 : prev))
-                                            }
-                                            className={
-                                                currentPage === totalPages ? "pointer-events-none opacity-50" : ""
-                                            }
-                                        />
-                                    </PaginationItem>
-                                </PaginationContent>
-                            </Pagination>
+                        <div className="flex justify-center items-center mt-4">
+                            <Pagination1 currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
                         </div>
                     </div>
                 </TabsContent>
             </Tabs>
+            <AgentRecommendationModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                onRecommend={handleRecommend}
+                clients={clients}/>
         </div>
     );
 };

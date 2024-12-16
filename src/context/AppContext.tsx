@@ -3,7 +3,8 @@ import React, {createContext, ReactNode, useContext, useState} from "react";
 import {AppState} from "@/context/AppState.ts";
 import {ClientDto} from "@/models/Client.ts";
 import {PaginationState} from "@tanstack/react-table";
-
+import {AgentDto} from "@/models/AgentDto.ts";
+import {Notification} from "@/models/Notification.ts";
 const AppContext = createContext<AppState | undefined>(undefined);
 
 // Provider Component
@@ -15,8 +16,11 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         pageIndex: 0,
         pageSize: 3
     });
-
+    const [connectedAgent, setConnectedAgent] = useState<AgentDto | null>(null);
     const [currentPage, setCurrentPage] = useState(1);
+    const [accessToken,setAccessToken] = useState<string>('')
+    const [Notifications,setNotifications] = useState<Notification[]>([])
+
 
     const resetPagination = () => {
         setPagination({
@@ -27,16 +31,12 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
 
     // Method to update a specific client
     const updateClient = (updatedClient: ClientDto) => {
-        /*setClients(prevClients =>
-            prevClients.map(client =>
-                client.clientId === updatedClient.clientId ? updatedClient : client
-            )
-        );*/
-        // If the updated client is the currently selected client, update it too
         setSelectedClient(prevSelected =>
             prevSelected?.clientId === updatedClient.clientId ? updatedClient : prevSelected
         );
     };
+
+    
 
     return (
         <AppContext.Provider value={{
@@ -51,7 +51,13 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
             totalPages,
             setTotalPages,
             currentPage,
-            setCurrentPage
+            setCurrentPage,
+            accessToken,
+            setAccessToken,
+            connectedAgent,
+            setConnectedAgent,
+            Notifications,
+            setNotifications
         }}>
             {children}
         </AppContext.Provider>

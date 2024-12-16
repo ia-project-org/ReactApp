@@ -21,7 +21,12 @@ export default {
 			"background-paper-elevation-0": "#fff",
 			"info-main": "#0288d1",
 			"info-contrasttext": "#fff",
-  			card: {
+			"primary-contrasttext": "#fff",
+			"dodgerblue": "#1976d2",
+			"gainsboro": "#e5e5ea",
+			"text-secondary": "rgba(0, 0, 0, 0.6)",
+
+			card: {
   				DEFAULT: 'hsl(var(--card))',
   				foreground: 'hsl(var(--card-foreground))'
   			},
