@@ -30,6 +30,7 @@ pipeline {
             steps {
                 script {
                     echo "Installing dependencies..."
+                    sh 'rm -rf node_modules package-lock.json'
                     sh 'npm install'
                 }
             }
