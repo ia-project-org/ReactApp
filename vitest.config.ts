@@ -13,6 +13,7 @@ export default defineConfig({
     },
   },
   test: {
+    // include: ["src/**/*.test.{ts,tsx}"],
     globals: true,            // Enable globals like `describe`, `it`, `expect`
     environment: 'jsdom',      // Ensure jsdom is used for DOM testing
     setupFiles: './src/setupTests.ts', // Automatically import necessary setups
