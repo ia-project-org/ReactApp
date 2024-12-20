@@ -21,7 +21,7 @@ export const AgentRecommendationModal: React.FC<{
     onClose: () => void;
     onRecommend: (agents: Agent[]) => void;
     clients: ClientDto[];
-}> = ({ isOpen, onClose, onRecommend, clients }) => {
+}> = ({ isOpen, onClose, onRecommend}) => {
     const [selectedAgents, setSelectedAgents] = useState<Agent[]>([]);
 
     // Toggle agent selection

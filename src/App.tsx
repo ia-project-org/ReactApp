@@ -1,6 +1,5 @@
 import {createBrowserRouter, Navigate, Outlet, RouterProvider, useLocation} from 'react-router-dom';
 import Dashboard from "@/components/dashboard/Dashboard.tsx";
-import ClientTable from "@/components/dashboard/page.tsx";
 import Login from './pages/login.tsx';
 import './App.css'
 import React, {useEffect} from "react";
@@ -10,7 +9,6 @@ import Navbar from "@/components/dashboard/navbar/Navbar.tsx";
 import {useAuth} from "@/keycloak/Authentification.tsx";
 import axiosInstance from "@/api/axiosInstance.ts";
 import Recommendations from "@/pages/Recommendations.tsx";
-import {useAppContext} from "@/context/AppContext.tsx";
 
 
 const RootLayout: React.FC = () => {

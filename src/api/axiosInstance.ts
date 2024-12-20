@@ -43,14 +43,12 @@ axiosInstance.interceptors.response.use(
                     originalRequest.headers['Authorization'] = `Bearer ${storedToken}`;
 
                     return axiosInstance(originalRequest);
-                } else {
-                    throw new Error('Refresh token handler not set');
                 }
             } catch (refreshError) {
-                // If refresh fails
+                // If refresh fails, clear tokens and redirect
                 localStorage.removeItem('jwtToken');
                 localStorage.removeItem('refreshToken');
-                // Optionally redirect to login page
+                // Redirect to login page
                 window.location.href = '/';
 
                 return Promise.reject(refreshError);

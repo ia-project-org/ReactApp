@@ -1,4 +1,28 @@
+// eslint-disable-next-line react-refresh/only-export-components
 const RADIAN = Math.PI / 180;
+
+// Define types for the parameters
+interface LabelProps {
+    cx: number;
+    cy: number;
+    midAngle: number;
+    innerRadius: number;
+    outerRadius: number;
+    percent: number;
+    index: number;
+    value: number;
+}
+
+interface NeedleProps {
+    value: number;
+    data: { value: number }[];
+    cx: number;
+    cy: number;
+    iR: number;
+    oR: number;
+    color: string;
+}
+
 
 export const renderCustomizedLabel = ({
                                           cx,
@@ -7,9 +31,7 @@ export const renderCustomizedLabel = ({
                                           innerRadius,
                                           outerRadius,
                                           percent,
-                                          index,
-                                          value
-                                      }) => {
+                                      }: LabelProps) => {
     const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
     const x = cx + radius * Math.cos(-midAngle * RADIAN);
     const y = cy + radius * Math.sin(-midAngle * RADIAN);
@@ -26,8 +48,15 @@ export const renderCustomizedLabel = ({
         </text>
     );
 };
-
-export const needle = (value, data, cx, cy, iR, oR, color) => {
+export const needle = (
+    value: NeedleProps["value"],
+    data: NeedleProps["data"],
+    cx: NeedleProps["cx"],
+    cy: NeedleProps["cy"],
+    iR: NeedleProps["iR"],
+    oR: NeedleProps["oR"],
+    color: NeedleProps["color"]
+) => {
     let total = 0;
     data.forEach((v) => {
         total += v.value;
@@ -47,8 +76,12 @@ export const needle = (value, data, cx, cy, iR, oR, color) => {
     const yp = y0 + length * sin;
 
     return [
-        <circle cx={x0} cy={y0} r={r} fill={color} stroke="none" />,
-        <path d={`M${xba} ${yba}L${xbb} ${ybb} L${xp} ${yp} L${xba} ${yba}`} stroke="#none" fill={color} />,
+        <circle cx={x0} cy={y0} r={r} fill={color} stroke="none" key="circle" />,
+        <path
+            d={`M${xba} ${yba}L${xbb} ${ybb} L${xp} ${yp} L${xba} ${yba}`}
+            stroke="none"
+            fill={color}
+            key="path"
+        />,
     ];
 };
-

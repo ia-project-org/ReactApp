@@ -91,10 +91,11 @@ const FileUploader = () => {
 
     try {
       formData.append('file', file);
-      const response = await importCsvFile(formData)
+      await importCsvFile(formData)
       showToast('success', 'CSV file uploaded successfully!');
     } catch (error) {
       showToast('error', 'Failed to upload CSV file. Please try again.');
+      throw error
     }
   };
 
@@ -209,7 +210,7 @@ const FileUploader = () => {
                focus:ring-offset-2 transition-colors duration-300"
                 onClick={() => {
                   setLoading(true);
-                  handleSubmit().then(r=> {
+                  handleSubmit().then(()=> {
                     setCsvData([]);
                     setLoading(false);
                   });

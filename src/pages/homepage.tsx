@@ -11,7 +11,7 @@ function Homepage(){
         <nav className="fixed top-0 h-[80px] w-screen left-0 flex items-center justify-between px-8 bg-[#013A40]">
               <div className="flex items-center">
                 <img
-                  src="./src/assets/logo.png"
+                  src="./assets/logo.png"
                   alt="App logo"
                   className="w-[191.5px] h-[46px]"
                 />
@@ -45,7 +45,7 @@ function Homepage(){
               </div>
             </nav>
 
-          <div className="bg-[url('./src/assets/hero-section.jpg')] h-[500px] w-screen mt-16 flex flex-col justify-center items-center">
+          <div className="bg-[url('./assets/hero-section.jpg')] h-[500px] w-screen mt-16 flex flex-col justify-center items-center">
             <h1 className="text-7xl font-extrabold text-[#0094A2] mb-4 w-[1200px]">Revolutionizing <span className="text-[#115F67]">Credit Evaluation</span> with <span className="text-[#115F67]">AI-Driven Solutions</span></h1>
             <p className="text-lg font-medium text-[#115F67] mb-20  w-[900px]">Enhance banking decisions with the power of advanced analytics, leveraging AI-driven insights and delivering personalized credit solutions tailored to your clients' unique needs.</p>
             <a href="#contact" className="font-extrabold bg-[#FF8903] text-[#013A40] px-6 py-3 rounded-full text-center flex items-center space-x-2">
@@ -75,7 +75,7 @@ function Homepage(){
           <div className="flex-shrink-0">
             <img
               alt="Hand reaching for our logo"
-              src="./src/assets/about-us.png"
+              src="./assets/about-us.png"
               className="w-[300px] h-[300px] object-contain"
             />
           </div>
@@ -111,7 +111,7 @@ function Homepage(){
 
       <div className="service flex flex-col items-center text-center">
         <img
-          src="./src/assets/predict.png"
+          src="./assets/predict.png"
           alt="Predict Credit Scores"
           className="w-28 h-28 mb-4"
         />
@@ -123,7 +123,7 @@ function Homepage(){
 
       <div className="service flex flex-col items-center text-center">
         <img
-          src="./src/assets/recommend.png"
+          src="./assets/recommend.png"
           alt="Personalized Credit Suggestions"
           className="w-24 h-24 mb-[34.5px]"
         />
@@ -134,7 +134,7 @@ function Homepage(){
 
       <div className="service flex flex-col items-center text-center">
         <img
-          src="./src/assets/automatic-emails.png"
+          src="./assets/automatic-emails.png"
           alt="Send Recommendations"
           className="w-20 h-20 mb-[50px]"
         />
@@ -145,7 +145,7 @@ function Homepage(){
 
       <div className="service flex flex-col items-center text-center">
         <img
-          src="./src/assets/import.png"
+          src="./assets/import.png"
           alt="Import Client Data"
           className="w-20 h-20 mb-[50px]"
         />

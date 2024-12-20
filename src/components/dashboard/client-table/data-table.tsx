@@ -1,19 +1,20 @@
-import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table.tsx";
-import { useAppContext } from "@/context/AppContext.tsx";
+import {ColumnDef, flexRender, getCoreRowModel, useReactTable} from "@tanstack/react-table";
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table.tsx";
+import {useAppContext} from "@/context/AppContext.tsx";
 import Pagination1 from "@/components/ui/Pagination.tsx";
-import { Badge } from "@/components/ui/badge.tsx";
-import { Input } from "@/components/ui/input.tsx";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx";
-import { useState, useMemo } from "react";
-import { Tabs, TabsContent } from "@radix-ui/react-tabs";
+import {Badge} from "@/components/ui/badge.tsx";
+import {Input} from "@/components/ui/input.tsx";
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select.tsx";
+import {useMemo, useState} from "react";
+import {Tabs, TabsContent} from "@radix-ui/react-tabs";
+import {ClientDto} from "@/models/Client.ts";
 
-interface DataTableProps<TData, TValue> {
+interface DataTableProps<TData , TValue> {
     columns: ColumnDef<TData, TValue>[]
     data: TData[]
 }
 
-export function DataTable<TData, TValue>({
+export function DataTable<TData extends ClientDto, TValue>({
                                              columns,
                                              data,
                                          }: DataTableProps<TData, TValue>) {
@@ -52,7 +53,7 @@ export function DataTable<TData, TValue>({
         getCoreRowModel: getCoreRowModel(),
     });
 
-    const handlePageChange = (page) => {
+    const handlePageChange = (page: number) => {
         setCurrentPage(page);
     };
 

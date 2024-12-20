@@ -1,6 +1,6 @@
-import { render, screen } from "@testing-library/react";
-import { describe, it, expect } from "vitest";
-import { MemoryRouter } from "react-router-dom"; // To simulate routes in tests
+import {render} from "@testing-library/react";
+import {describe, it} from "vitest";
+import {MemoryRouter} from "react-router-dom"; // To simulate routes in tests
 import App from "./App";
 
 describe("App Component", () => {

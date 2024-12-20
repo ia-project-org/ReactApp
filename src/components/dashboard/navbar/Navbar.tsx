@@ -2,9 +2,8 @@ import React, {useState} from 'react';
 import {useLocation, useNavigate} from "react-router-dom";
 import {Bell, LogOut} from 'lucide-react';
 import {Notification} from "@/models/Notification.ts";
-import {useAppContext} from "@/context/AppContext.tsx";
 import {useAuth} from "@/keycloak/Authentification.tsx";
-import {NotificationDropdown} from "@/components/dashboard/NotificationDropdown.tsx";
+import NotificationDropdown from "@/components/dashboard/NotificationDropdown.tsx";
 import {getNotifications} from "@/api/_callApi.ts";
 import {jwtDecode} from "jwt-decode";
 
@@ -14,6 +13,10 @@ const ROUTES = [
     { name: 'New Clients', path: '/upload' }
 ];
 
+
+interface jwcodprops {
+    name: string;
+}
 const UserAvatar = ({ username }: { username: string }) => {
     const initials = username
         .split(' ')
@@ -33,7 +36,8 @@ const Navbar: React.FC = () => {
     const navigation = useNavigate();
     const location = useLocation();
     const {signOut,getToken} = useAuth();
-    const username = getToken()&&jwtDecode(getToken()).name;
+    const token = getToken(); // Récupère le token
+    const username = token ? jwtDecode<jwcodprops>(token).name : null;
     // State for notifications and dropdown
     const [notifications, setNotifications] = useState<Notification[]>([]);
     const [showNotifications, setShowNotifications] = useState(false);
@@ -65,7 +69,7 @@ const Navbar: React.FC = () => {
             {/* Left side - Welcome message */}
             <div className="flex items-center">
                 <img
-                    src="./src/assets/logo.png"
+                    src="./assets/logo.png"
                     alt="App logo"
                     className="w-[191.5px] h-[46px]"
                 />
