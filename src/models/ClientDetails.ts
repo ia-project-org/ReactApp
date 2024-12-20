@@ -2,6 +2,7 @@ import {ClientDto} from "@/models/Client.ts";
 
 export interface ClientDetailsDto{
     clientId: number;
+    score: number;
     client: ClientDto;
     month: number;
     age: number;

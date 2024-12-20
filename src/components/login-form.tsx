@@ -65,7 +65,7 @@ export function LoginForm() {
                                 control={form.control}
                                 rules={{ required: "Username is required" }}
                                 render={({ field }) => (
-                                    <FormItem>
+                                    <FormItem className="flex flex-col items-start">
                                         <FormLabel>Username</FormLabel>
                                         <Input
                                             type="text"
@@ -81,7 +81,7 @@ export function LoginForm() {
                                 control={form.control}
                                 rules={{ required: "Password is required" }}
                                 render={({ field }) => (
-                                    <FormItem>
+                                    <FormItem className="flex flex-col items-start">
                                         <FormLabel>Password</FormLabel>
                                         <Input
                                             type="password"
