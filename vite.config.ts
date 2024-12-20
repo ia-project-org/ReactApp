@@ -2,6 +2,8 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import * as path from "node:path";
 import {viteStaticCopy} from "vite-plugin-static-copy";
+import { NodeGlobalsPolyfillPlugin } from '@esbuild-plugins/node-globals-polyfill';
+import { NodeModulesPolyfillPlugin } from '@esbuild-plugins/node-modules-polyfill';
 
 export default defineConfig({
   plugins: [
@@ -9,8 +11,8 @@ export default defineConfig({
     viteStaticCopy({
       targets: [
         {
-          src: './src/assets/**/*',  // Changé pour inclure les sous-dossiers
-          dest: 'assets'         // Chemin de destination explicite
+          src: './src/assets/**/*',
+          dest: 'assets'
         }
       ],
       hook: 'writeBundle' // S'assure que la copie se fait à la fin du build
@@ -24,12 +26,13 @@ export default defineConfig({
     alias: {
       "@": path.resolve(__dirname, "./src"),
       'global': 'window',
-      'process': 'process/browser'
+      'process': 'process/browser',
+      crypto: 'crypto-browserify',
     },
   },
   build: {
 
-    chunkSizeWarningLimit: 1000,
+    chunkSizeWarningLimit: 4000,
     manifest: true,
     rollupOptions: {
       input: './index.html',
@@ -41,6 +44,15 @@ export default defineConfig({
     },
   },
   optimizeDeps: {
-    include: ['sockjs-client']
-  }
+    include: ['sockjs-client'],
+    esbuildOptions: {
+      plugins: [
+        NodeGlobalsPolyfillPlugin({
+          process: true,
+          buffer: true,
+        }),
+        NodeModulesPolyfillPlugin(),
+      ],
+    },
+  },
 });
