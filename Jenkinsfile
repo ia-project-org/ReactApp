@@ -30,6 +30,7 @@ pipeline {
             steps {
                 script {
                     echo "Installing dependencies..."
+                    sh 'rm -rf node_modules package-lock.json'
                     sh 'npm install'
                 }
             }
@@ -39,7 +40,7 @@ pipeline {
             steps {
                 script { 
                     echo "Running Vitest tests..."
-                    sh 'npm test -- --reporter=json > test-output.json'
+                    sh 'npx vitest --reporter=json --run > test-output.json'
                     sh 'npm run coverage'
                     stash name: 'test-results', includes: 'test-output.json'
                 }
