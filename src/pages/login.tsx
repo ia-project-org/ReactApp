@@ -4,7 +4,7 @@ function Login() {
 
     return(
         <>
-            <div className="bg-[url('./src/assets/login-background.jpg')]
+            <div className="bg-[url('./assets/login-background.jpg')]
                         bg-cover bg-center
                         flex items-center justify-center
                         min-h-screen min-w-full">

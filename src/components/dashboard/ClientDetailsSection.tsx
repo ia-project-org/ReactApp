@@ -1,24 +1,9 @@
-import React, { useMemo } from 'react';
-import { Calendar, UserRoundSearchIcon } from 'lucide-react';
-import { Progress } from "@/components/ui/progress";
-import { Button } from "@/components/ui/button";
+import {useMemo} from 'react';
+import {Calendar, UserRoundSearchIcon} from 'lucide-react';
+import {Progress} from "@/components/ui/progress";
+import {Button} from "@/components/ui/button";
 import ClientCard from "@/components/dashboard/ClientCard.tsx";
 import {ClientDto} from "@/models/Client.ts";
-
-// Type definition for better type safety
-interface ClientDetails {
-    details: {
-        monthly_inhand_salary?: number;
-        annual_income?: number;
-        credit_utilization_ratio?: number;
-        credit_mix?: string;
-    };
-    eligibility: {
-        lastCheckedDate?: number;
-    };
-    score: number;
-}
-
 
 
 // Utility function for formatting currency and percentage values
@@ -36,7 +21,7 @@ const formatValue = (value: number | undefined, type: 'currency' | 'percentage' 
 interface ClientDetailsSectionProps {
     selectedClient?: ClientDto | null;
     evaluatClient: () => void;
-    formatDate: (date: number) => string;
+    formatDate: (date: Date) => string;
 }
 
 export function ClientDetailsSection({

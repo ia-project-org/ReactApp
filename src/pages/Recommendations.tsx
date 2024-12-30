@@ -4,11 +4,12 @@ import {Button} from "@/components/ui/button";
 import {Badge} from "@/components/ui/badge";
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs.tsx";
 import {Input} from "@/components/ui/input";
-import Pagination1 from "@/components/ui/pagination";
 import {useAppContext} from "@/context/AppContext.tsx";
 import {getData} from "@/api/_callApi.ts";
 import {useNavigate} from "react-router-dom";
 import {AgentRecommendationModal} from "@/pages/RecommendAction.tsx";
+import {AgentDto} from "@/models/AgentDto.ts";
+import Pagination1 from "@/components/ui/Pagination.tsx";
 
 const Recommendations: React.FC = () => {
     const [filter, setFilter] = useState<string>("View-All");
@@ -37,12 +38,12 @@ const Recommendations: React.FC = () => {
         setSelectAll(!selectAll);
     };
 
-    const handleRecommend = (agents) => {
+    const handleRecommend = (agents: AgentDto[]) => {
         // Recommendation logic
         console.log('Recommended Agents:', agents);
     };
 
-    const handlePageChange = (page) => {
+    const handlePageChange = (page: number) => {
         setCurrentPage(page);
     };
 

@@ -5,14 +5,7 @@ import {jwtDecode} from "jwt-decode";
 import {useAppContext} from "@/context/AppContext";
 import {AxiosInstance} from "axios";
 import {AuthState} from "@/keycloak/AuthState.ts";
-
-// Environment Configuration
-const KEYCLOAK_CONFIG = {
-    REALM: import.meta.env.VITE_PUBLIC_KEYCLOAK_REALM,
-    CLIENT_ID: import.meta.env.VITE_PUBLIC_KEYCLOAK_CLIENT_ID,
-    CLIENT_SECRET: import.meta.env.VITE_PUBLIC_KEYCLOAK_CLIENT_SECRET,
-    BASE_URL: import.meta.env.VITE_PUBLIC_KEYCLOAK_URL
-};
+import {KEYCLOAK_CONFIG} from "@/keycloak/authConfig.ts";
 
 // Custom JWT Payload interface
 interface CustomJwtPayload {
@@ -32,25 +25,28 @@ const AuthContext = createContext<AuthState | undefined>(undefined);
 // Keycloak's JWKS URL
 const JWKS_URL = `${KEYCLOAK_CONFIG.BASE_URL}/realms/${KEYCLOAK_CONFIG.REALM}/protocol/openid-connect/certs`;
 
-// remote JWK Set
-const jwks = createRemoteJWKSet(new URL(JWKS_URL));
-
 // Authentication Provider Component
-const Authentification: React.FC<{ children: ReactNode }> = ({ children }) => {
+const Authentication: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [user, setUser] = useState<User | null>(null);
     const { setConnectedAgent, setAccessToken } = useAppContext();
 
     // Verify token
     const verify = async (token: string) => {
         try {
-            const { payload } = await jwtVerify(token, jwks);
-            
+            // Create a remote JWK Set
+            const jwks = createRemoteJWKSet(new URL(JWKS_URL));
+            // Verify the token directly
+            const { payload } = await jwtVerify(token, jwks, {
+                algorithms: ['RS256'], // Keycloak usually uses RS256
+                issuer: `${KEYCLOAK_CONFIG.BASE_URL}/realms/${KEYCLOAK_CONFIG.REALM}`, // Match your Keycloak realm's issuer
+            });
             return payload;
         } catch (error) {
-            
-            throw new Error('Invalid or expired token');
+            console.error('Token verification failed:', error);
+            return null;
         }
     };
+
 
     // Get current user
     const getUser = () => user;
@@ -63,63 +59,55 @@ const Authentification: React.FC<{ children: ReactNode }> = ({ children }) => {
         return localStorage.getItem('jwtToken') || null;
     };
 
-    // User Login
     const userLogin = async (username: string, password: string) => {
-        try {
-            const response = await fetch(`${KEYCLOAK_CONFIG.BASE_URL}/realms/${KEYCLOAK_CONFIG.REALM}/protocol/openid-connect/token`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: new URLSearchParams({
-                    grant_type: 'password',
-                    client_id: KEYCLOAK_CONFIG.CLIENT_ID,
-                    username,
-                    password,
-                    client_secret: KEYCLOAK_CONFIG.CLIENT_SECRET,
-                    scope: 'openid profile'
-                })
-            });
+        const response = await fetch(`${KEYCLOAK_CONFIG.BASE_URL}/realms/${KEYCLOAK_CONFIG.REALM}/protocol/openid-connect/token`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({
+                grant_type: 'password',
+                client_id: KEYCLOAK_CONFIG.CLIENT_ID,
+                username,
+                password,
+                client_secret: KEYCLOAK_CONFIG.CLIENT_SECRET,
+                scope: 'openid profile'
+            })
+        });
 
-            if (response.ok) {
-                const tokenResponse = await response.json();
-                await verify(tokenResponse.access_token);
-
-                const newUser = new User({
-                    access_token: tokenResponse.access_token,
-                    id_token: tokenResponse.id_token,
-                    refresh_token: tokenResponse.refresh_token,
-                    token_type: tokenResponse.token_type,
-                    scope: tokenResponse.scope,
-                    expires_at: Date.now() + (tokenResponse.expires_in * 1000),
-                    session_state: tokenResponse.session_state,
-                    profile: tokenResponse.profile,
-                    state: tokenResponse.state
-                });
-
-                setUser(newUser);
-
-                const decodedToken = jwtDecode(tokenResponse.access_token) as CustomJwtPayload;
-                setConnectedAgent({
-                    agentId: 1,
-                    password: "",
-                    username: decodedToken.name || decodedToken.preferred_username || ''
-                });
-
-                localStorage.setItem('jwtToken', tokenResponse.access_token);
-                localStorage.setItem('refreshToken', tokenResponse.refresh_token);
-                localStorage.setItem('tokenExpiry', (Date.now() + (tokenResponse.expires_in * 1000)).toString());
-
-                return newUser;
-            } else {
-                const errorText = await response.text();
-                
-                throw new Error('Failed to login');
-            }
-        } catch (error) {
-            
-            throw error;
+        if (!response.ok) {
+            throw new Error('Failed to login');
         }
+
+        const tokenResponse = await response.json();
+        await verify(tokenResponse.access_token);
+
+        const newUser = new User({
+            access_token: tokenResponse.access_token,
+            id_token: tokenResponse.id_token,
+            refresh_token: tokenResponse.refresh_token,
+            token_type: tokenResponse.token_type,
+            scope: tokenResponse.scope,
+            expires_at: Date.now() + (tokenResponse.expires_in * 1000),
+            session_state: tokenResponse.session_state,
+            profile: tokenResponse.profile,
+            state: tokenResponse.state
+        });
+
+        setUser(newUser);
+
+        const decodedToken = jwtDecode(tokenResponse.access_token) as CustomJwtPayload;
+        setConnectedAgent({
+            agentId: 1,
+            password: "",
+            username: decodedToken.name || decodedToken.preferred_username || ''
+        });
+
+        localStorage.setItem('jwtToken', tokenResponse.access_token);
+        localStorage.setItem('refreshToken', tokenResponse.refresh_token);
+        localStorage.setItem('tokenExpiry', (Date.now() + (tokenResponse.expires_in * 1000)).toString());
+
+        return newUser;
     };
 
     // Sign Out
@@ -137,8 +125,9 @@ const Authentification: React.FC<{ children: ReactNode }> = ({ children }) => {
                     refresh_token: localStorage.getItem('refreshToken') || ''
                 })
             });
+            // eslint-disable-next-line no-useless-catch
         } catch (error) {
-            
+            throw error
         } finally {
             // Always clear local storage and reset state
             setUser(null);
@@ -196,13 +185,11 @@ const Authentification: React.FC<{ children: ReactNode }> = ({ children }) => {
 
                 return updatedUser;
             } else {
-                const errorText = await response.text();
-                
                 await signOut();
                 throw new Error('Failed to refresh token');
             }
         } catch (error) {
-            
+
             await signOut();
             throw error;
         }
@@ -282,8 +269,8 @@ const Authentification: React.FC<{ children: ReactNode }> = ({ children }) => {
                             setAccessToken(storedToken);
                         }
                     } catch (error) {
-                        
                         await signOut();
+                        throw error
                     }
                 }
             };
@@ -321,4 +308,4 @@ export function useAuth() {
     return context;
 }
 
-export { AuthContext, Authentification };
+export { AuthContext, Authentication };

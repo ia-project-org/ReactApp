@@ -4,7 +4,13 @@ import { ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { ButtonProps, buttonVariants } from "@/components/ui/button"
-const Pagination1 = ({ currentPage, totalPages, onPageChange }) => {
+interface PaginationProps {
+    currentPage: number;
+    totalPages: number;
+    onPageChange: (page: number) => void; // Function to handle page change
+}
+
+const Pagination1 = ({ currentPage, totalPages, onPageChange }: PaginationProps) => {
     // Calculate the range of pages to display
     const startPage = Math.max(currentPage - 2, 1);
     const endPage = Math.min(currentPage + 2, totalPages);

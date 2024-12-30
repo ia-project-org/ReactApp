@@ -36,8 +36,9 @@ export function LoginForm() {
             }
         } catch (error) {
             setLoginError("Incorrect username or password");
+            throw error
         }
-    }, [navigation]);
+    }, [navigation, userLogin]);
 
     const handleCloseToast = () => setLoginError(null);
 
@@ -47,7 +48,7 @@ export function LoginForm() {
                 <CardHeader className="mb-5">
                     <div className="flex justify-center mb-4">
                         <img
-                            src="./src/assets/logo.png"
+                            src="./assets/logo.png"
                             alt="App logo"
                             className="w-42"
                         />

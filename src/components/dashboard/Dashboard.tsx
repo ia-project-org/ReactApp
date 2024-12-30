@@ -12,7 +12,7 @@ const Dashboard: React.FC = () => {
     const {selectedClient, setSelectedClient,updateClient} = useAppContext();
 
     // Function to format the date to YYYY-MM-DD
-    const formatDate = (date) => {
+    const formatDate = (date: Date) => {
         return new Date(date).toLocaleDateString().split('T')[0];
     };
 

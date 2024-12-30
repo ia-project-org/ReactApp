@@ -3,9 +3,6 @@ import {needle, renderCustomizedLabel} from "@/components/dashboard/PieChartWith
 import DashboardCard from "@/components/dashboard/DashboardCard.tsx";
 import {ChartLine} from "@mynaui/icons-react";
 import React from "react";
-import {useAppContext} from "@/context/AppContext.tsx";
-import {createAuthenticatedAxios} from "@/api/_callApi.ts";
-import {useAuth} from "@/keycloak/Authentification.tsx";
 import axiosInstance from "@/api/axiosInstance.ts";
 
 const cx = 100;
@@ -187,7 +184,7 @@ const Statistics = () => {
                         ))}
                     </Pie>
                     {needle(value, data, cx, cy, iR, oR, '#d0d000')}
-                    <Legend verticalAlign={true}/>
+                    <Legend verticalAlign='top'/>
                 </PieChart>
             </div>
         </div>
