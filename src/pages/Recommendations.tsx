@@ -191,10 +191,10 @@ const Recommendations: React.FC = () => {
                                             <TableCell>{client.email}</TableCell>
                                             <TableCell>
                                                 <Badge
-                                                    variant={client.eligibility.eligibilityResult === "Good" ? "good" : "standard"}
+                                                    variant={client.eligibility?.eligibilityResult === "Good" ? "good" : "standard"}
                                                     className="px-3 py-1 rounded-full"
                                                 >
-                                                    {client.eligibility.eligibilityResult}
+                                                    {client.eligibility?.eligibilityResult}
                                                 </Badge>
                                             </TableCell>
                                             <TableCell>
