@@ -28,7 +28,7 @@ export default function ClientTable({ onClientDetails }: ClientTableProps,) {
 
     useEffect(() => {
         fetchData().then();
-    });
+    },[currentPage]);
 
     if (loading) {
         return <Spinner/>;

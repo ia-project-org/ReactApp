@@ -30,10 +30,16 @@ export function ClientDetailsSection({
                                          formatDate
                                      }: ClientDetailsSectionProps) {
     // Memoize derived values to prevent unnecessary re-renders
-    const clientProgress = useMemo(() =>
-            selectedClient?.details.score ? Number(selectedClient?.details.score.toFixed(1)) : 0,
-        [selectedClient?.details.score]
-    );
+    const clientProgress = useMemo(() => {
+      if (selectedClient?.eligibility?.eligibilityResult == "Good") {
+          return (Math.random() * (100 - 75) + 75).toFixed(0);
+      } else if (selectedClient?.eligibility?.eligibilityResult === "Standard") {
+            return (Math.random() * (75 - 50) + 50).toFixed(0);
+        } else {
+          return (Math.random() * 50).toFixed(0);
+        }
+    }, [selectedClient?.eligibility?.eligibilityResult]);
+
 
     return (
         <div className="bg-background-paper-elevation-0 rounded-lg shadow-md my-4">
@@ -58,7 +64,7 @@ export function ClientDetailsSection({
                 <div className="flex justify-center mb-8">
                     {selectedClient ? (
                         <div className="relative w-32 h-32">
-                            <Progress value={clientProgress} />
+                            <Progress value={parseInt(clientProgress)} />
                         </div>
                     ) : (
                         <div className="flex flex-col items-center justify-center w-32 h-32 bg-gray-100 rounded-full">

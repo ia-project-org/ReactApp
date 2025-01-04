@@ -6,7 +6,6 @@ import {AppProvider} from "@/context/AppContext.tsx";
 import {Authentication} from "@/keycloak/Authentification.tsx";
 
 
-
 createRoot(document.getElementById('root')!).render(
     <AppProvider>
         <Authentication>
