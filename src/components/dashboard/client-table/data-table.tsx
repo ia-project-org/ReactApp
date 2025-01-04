@@ -123,8 +123,8 @@ export function DataTable<TData extends ClientDto, TValue>({
                                                     return (
                                                         <TableCell key={cell.id}>
                                                             {cell.column.id === "eligibility" ? (
-                                                                <Badge variant={cell.row.original.eligibility.eligibilityResult === "Good" ? "good" : "standard"}>
-                                                                    {cell.row.original.eligibility.eligibilityResult || selectedClient?.eligibility.eligibilityResult}
+                                                                <Badge variant={cell.row.original.eligibility?.eligibilityResult === "Good" ? "good" : "standard"}>
+                                                                    {cell.row.original.eligibility?.eligibilityResult || selectedClient?.eligibility?.eligibilityResult}
                                                                 </Badge>
                                                             ) : (
                                                                 flexRender(cell.column.columnDef.cell, cell.getContext())

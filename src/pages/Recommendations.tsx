@@ -145,7 +145,7 @@ const Recommendations: React.FC = () => {
                                 className="w-full md:w-1/3 rounded-full border-gray-300 focus:ring-blue-500"
                             />
                             <div className="text-gray-500 text-sm">
-                                Last updated 02/12/2024 at 12:45PM
+                                Last updated {new Date().toLocaleDateString()}
                             </div>
                         </div>
 

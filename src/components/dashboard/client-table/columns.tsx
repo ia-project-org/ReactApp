@@ -34,7 +34,9 @@ export const clientColumns = (onClientDetails: (client: ClientDto) => void): Col
         header: "Details",
         cell: ({ row }) => (
             <button
-                onClick={() => onClientDetails(row.original)}
+                onClick={() =>
+                    onClientDetails(row.original)
+                }
                 className="px-4 py-2 bg-blue-500 text-white rounded-[3px]"
             >
                 Details

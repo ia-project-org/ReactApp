@@ -94,6 +94,7 @@ const FileUploader = () => {
       await importCsvFile(formData)
       showToast('success', 'CSV file uploaded successfully!');
     } catch (error) {
+      setLoading(false);
       showToast('error', 'Failed to upload CSV file. Please try again.');
       throw error
     }
@@ -224,32 +225,37 @@ const FileUploader = () => {
           <Toast
               open={toastOpen}
               onOpenChange={setToastOpen}
+              duration={3000}
               className={cn(
-                  "bg-white justify-between  rounded-lg shadow-lg p-4 border-2 flex items-center space-x-3 z-50",
+                  "fixed top-4 right-4 z-[100] bg-white rounded-lg shadow-lg p-4 border-2 flex items-center space-x-3",
                   toastType === 'success'
-                      ? "border-green-300 text-green-600"
-                      : "border-red-300 text-red-600"
+                      ? "border-green-300"
+                      : "border-red-300"
               )}
           >
-            <div className="flex justify-around items-center space-x-3">
-              {toastType === 'success'
-                  ? <CheckCircle2 className="text-green-600"/>
-                  : <AlertCircle className="text-red-600"/>
-              }
+            <div className="flex items-center space-x-3">
+              {toastType === 'success' ? (
+                  <CheckCircle2 className="h-5 w-5 text-green-600" />
+              ) : (
+                  <AlertCircle className="h-5 w-5 text-red-600" />
+              )}
               <div>
-                <ToastTitle className="font-semibold">
+                <ToastTitle className={cn(
+                    "font-semibold",
+                    toastType === 'success' ? "text-green-600" : "text-red-600"
+                )}>
                   {toastType === 'success' ? 'Success' : 'Error'}
                 </ToastTitle>
-                <ToastDescription>
+                <ToastDescription className="text-gray-600">
                   {toastMessage}
                 </ToastDescription>
               </div>
             </div>
             <ToastClose className="ml-auto">
-              <X className="h-4 w-4"/>
+              <X className="h-4 w-4 text-gray-400 hover:text-gray-600" />
             </ToastClose>
           </Toast>
-          <ToastViewport className="fixed top-20 right-0 z-[100] m-4"/>
+          <ToastViewport className="fixed top-4 right-4 flex flex-col gap-2 w-full max-w-md z-[100]" />
         </div>
       </ToastProvider>
   );

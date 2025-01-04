@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import ClientTable from "@/components/dashboard/page.tsx";
 import {ClientDto} from "@/models/Client.ts";
 import {EligibilityDto} from "@/models/Eligibility.ts";
@@ -16,9 +16,10 @@ const Dashboard: React.FC = () => {
         return new Date(date).toLocaleDateString().split('T')[0];
     };
 
-    const handleClientDetails = (client: ClientDto) => {
+    const handleClientDetails  = useCallback((client: ClientDto) => {
+        console.log("Client details:", client); // Pour debug
         setSelectedClient(client);
-    };
+    }, []);
 
     const evaluatClient = async () =>{
         const eligibility = await axiosInstance.post<EligibilityDto>(`${import.meta.env.VITE_API_URL}eligibility/${selectedClient?.clientId}`);
