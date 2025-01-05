@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X, Check } from 'lucide-react';
 import {ClientDto} from "@/models/Client.ts";
+import {recommend} from "@/api/_callApi.ts";
 
 // Agent interface for type safety
 interface Agent {
@@ -21,7 +22,7 @@ export const AgentRecommendationModal: React.FC<{
     onClose: () => void;
     onRecommend: (agents: Agent[]) => void;
     clients: ClientDto[];
-}> = ({ isOpen, onClose, onRecommend}) => {
+}> = ({ isOpen, onClose, onRecommend,clients}) => {
     const [selectedAgents, setSelectedAgents] = useState<Agent[]>([]);
 
     // Toggle agent selection
@@ -34,10 +35,21 @@ export const AgentRecommendationModal: React.FC<{
     };
 
     // Handle recommendation submission
-    const handleRecommend = () => {
+    const handleRecommend = async () => {
         if (selectedAgents.length > 0) {
+            await Promise.all(
+                clients.map(async (client) => {
+                    try {
+                        await recommend(client.details);
+                    } catch (error) {
+                        console.error(`Failed to recommend for client ${client.clientId}:`, error);
+                        // Vous pouvez gérer l'erreur spécifique ici si nécessaire
+                    }
+                })
+            );
+            // Une fois toutes les recommandations terminées
             onRecommend(selectedAgents);
-            setSelectedAgents([])
+            setSelectedAgents([]);
             onClose();
         }
     };
