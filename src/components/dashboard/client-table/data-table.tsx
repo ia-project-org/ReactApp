@@ -123,7 +123,15 @@ export function DataTable<TData extends ClientDto, TValue>({
                                                     return (
                                                         <TableCell key={cell.id}>
                                                             {cell.column.id === "eligibility" ? (
-                                                                <Badge variant={cell.row.original.eligibility?.eligibilityResult === "Good" ? "good" : "standard"}>
+                                                                <Badge
+                                                                    variant={
+                                                                        cell.row.original.eligibility?.eligibilityResult === "Good"
+                                                                            ? "good"
+                                                                            : cell.row.original.eligibility?.eligibilityResult === "Standard"
+                                                                                ? "standard"
+                                                                                : "poor"
+                                                                    }
+                                                                >
                                                                     {cell.row.original.eligibility?.eligibilityResult || selectedClient?.eligibility?.eligibilityResult}
                                                                 </Badge>
                                                             ) : (

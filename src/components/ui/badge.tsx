@@ -17,7 +17,7 @@ const badgeVariants = cva(
                 outline: "text-foreground",
                 good: "bg-[#2E7D32]/30 border-2 border-[#2E7D32] text-[#2E7D32]",
                 standard: "bg-[#EF6C00]/30 border-2 border-[#EF6C00] text-[#EF6C00]",
-                bad: "bg-[#D32F2F]/30 border-2 border-[#D32F2F] text-[#D32F2F]",
+                poor: "bg-[#D32F2F]/30 border-2 border-[#D32F2F] text-[#D32F2F]",
             },
         },
         defaultVariants: {
