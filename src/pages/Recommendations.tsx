@@ -47,6 +47,11 @@ const Recommendations: React.FC = () => {
         setCurrentPage(page);
     };
 
+    // Dans votre composant Recommendations, ajoutez cette fonction
+    const getSelectedClients = () => {
+        return clients.filter(client => selectedRows.includes(client.clientId));
+    };
+
     // Check if a specific row is selected
     const isRowSelected = (id: number) => selectedRows.includes(id);
 
@@ -191,7 +196,13 @@ const Recommendations: React.FC = () => {
                                             <TableCell>{client.email}</TableCell>
                                             <TableCell>
                                                 <Badge
-                                                    variant={client.eligibility?.eligibilityResult === "Good" ? "good" : "standard"}
+                                                    variant={
+                                                        client.eligibility?.eligibilityResult === "Good"
+                                                            ? "good"
+                                                            : client.eligibility?.eligibilityResult === "Standard"
+                                                                ? "standard"
+                                                                : "poor"
+                                                    }
                                                     className="px-3 py-1 rounded-full"
                                                 >
                                                     {client.eligibility?.eligibilityResult}
@@ -202,6 +213,7 @@ const Recommendations: React.FC = () => {
                                                     <Button
                                                         className="bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-300 rounded-lg"
                                                         onClick={() => setIsModalOpen(true)}
+                                                        disabled={selectedRows.length === 0}
                                                     >
                                                         Recommend
                                                     </Button>
@@ -242,7 +254,7 @@ const Recommendations: React.FC = () => {
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
                 onRecommend={handleRecommend}
-                clients={clients}
+                clients2={getSelectedClients()} // Au lieu de clients
             />
         </div>
     );

@@ -14,6 +14,35 @@ interface PaginatedResponse<T> {
 }
 
 
+interface RecommendResponse {
+    success: boolean;
+    data: ClientDetailsDto;
+    message?: string;
+}
+
+export async function recommend(clientDetails: ClientDetailsDto): Promise<ClientDetailsDto> {
+    try {
+        const response = await axiosInstance.post<RecommendResponse>(
+            `${import.meta.env.VITE_API_URL}eligibility/recomand`,
+            clientDetails, // Ajout du body de la requête
+            {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }
+        );
+
+        return response.data.data;
+
+    } catch (error) {
+        if (error instanceof Error) {
+            throw new Error(`Recommendation failed: ${error.message}`);
+        } else {
+            throw new Error('An unexpected error occurred during recommendation');
+        }
+    }
+}
+
 // Corrigeons le type de setTotalPages
 export async function getData(
     currentPage: number,
