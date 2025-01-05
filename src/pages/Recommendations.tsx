@@ -203,10 +203,9 @@ const Recommendations: React.FC = () => {
                                                                 ? "standard"
                                                                 : "poor"
                                                     }
-
                                                     className="px-3 py-1 rounded-full"
                                                 >
-                                                    {client.eligibility.eligibilityResult}
+                                                    {client.eligibility?.eligibilityResult}
                                                 </Badge>
                                             </TableCell>
                                             <TableCell>
