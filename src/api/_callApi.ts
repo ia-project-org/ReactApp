@@ -25,11 +25,12 @@ export async function recommend(clientDetails: ClientDetailsDto): Promise<Client
         const response = await axiosInstance.post<RecommendResponse>(
             `${import.meta.env.VITE_API_URL}eligibility/recomand`,
             clientDetails, // Ajout du body de la requête
+            {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }
         );
-
-        if (!response.data.success) {
-            throw new Error(response.data.message || 'Failed to process recommendation');
-        }
 
         return response.data.data;
 

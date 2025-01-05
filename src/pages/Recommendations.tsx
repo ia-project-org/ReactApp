@@ -255,7 +255,7 @@ const Recommendations: React.FC = () => {
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
                 onRecommend={handleRecommend}
-                clients={getSelectedClients()} // Au lieu de clients
+                clients2={getSelectedClients()} // Au lieu de clients
             />
         </div>
     );
