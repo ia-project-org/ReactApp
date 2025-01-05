@@ -23,7 +23,7 @@ interface RecommendResponse {
 export async function recommend(clientDetails: ClientDetailsDto): Promise<ClientDetailsDto> {
     try {
         const response = await axiosInstance.post<RecommendResponse>(
-            `${import.meta.env.VITE_API_URL}/eligibility/recommend`,
+            `${import.meta.env.VITE_API_URL}eligibility/recomand`,
             clientDetails, // Ajout du body de la requête
         );
 
